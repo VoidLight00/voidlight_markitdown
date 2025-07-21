@@ -1,0 +1,69 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "voidlight-markitdown-mcp"
+dynamic = ["version"]
+description = 'An MCP server for the "voidlight_markitdown" library with enhanced Korean language support.'
+readme = "README.md"
+requires-python = ">=3.10"
+license = "MIT"
+keywords = ["korean", "markdown", "converter", "mcp", "한국어"]
+authors = [
+  { name = "VoidLight", email = "voidlight@example.com" },
+]
+classifiers = [
+  "Development Status :: 4 - Beta",
+  "Programming Language :: Python",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "Programming Language :: Python :: Implementation :: CPython",
+  "Programming Language :: Python :: Implementation :: PyPy",
+]
+dependencies = [
+  "mcp~=1.8.0",
+  "voidlight-markitdown[all]>=0.1.1,<0.2.0",
+]
+
+[project.urls]
+Documentation = "https://github.com/voidlight/voidlight_markitdown#readme"
+Issues = "https://github.com/voidlight/voidlight_markitdown/issues"
+Source = "https://github.com/voidlight/voidlight_markitdown"
+
+[tool.hatch.version]
+path = "src/voidlight_markitdown_mcp/__about__.py"
+
+[project.scripts]
+voidlight-markitdown-mcp = "voidlight_markitdown_mcp.__main__:main"
+
+[tool.hatch.envs.types]
+extra-dependencies = [
+  "mypy>=1.0.0",
+]
+[tool.hatch.envs.types.scripts]
+check = "mypy --install-types --non-interactive {args:src/voidlight_markitdown_mcp tests}"
+
+[tool.coverage.run]
+source_pkgs = ["voidlight-markitdown-mcp", "tests"]
+branch = true
+parallel = true
+omit = [
+  "src/voidlight_markitdown_mcp/__about__.py",
+]
+
+[tool.coverage.paths]
+voidlight-markitdown-mcp = ["src/voidlight_markitdown_mcp", "*/voidlight-markitdown-mcp/src/voidlight_markitdown_mcp"]
+tests = ["tests", "*/voidlight-markitdown-mcp/tests"]
+
+[tool.coverage.report]
+exclude_lines = [
+  "no cov",
+  "if __name__ == .__main__.:",
+  "if TYPE_CHECKING:",
+]
+
+[tool.hatch.build.targets.sdist]
+only-include = ["src/voidlight_markitdown_mcp"]

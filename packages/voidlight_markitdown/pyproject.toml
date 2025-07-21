@@ -1,0 +1,141 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "voidlight-markitdown"
+dynamic = ["version"]
+description = 'An extremely simple text-based document reader with enhanced Korean language support, suitable for LLM use.'
+readme = "README.md"
+requires-python = ">=3.10"
+license = "MIT"
+keywords = ["markdown", "converter", "korean", "한국어", "text extraction", "llm"]
+authors = [
+  { name = "VoidLight", email = "voidlight@example.com" },
+]
+classifiers = [
+  "Development Status :: 4 - Beta",
+  "Programming Language :: Python",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "Programming Language :: Python :: Implementation :: CPython",
+  "Programming Language :: Python :: Implementation :: PyPy",
+]
+dependencies = [
+  "beautifulsoup4>=4.11.1",
+  "markdownify>=0.11.6",
+  "charset-normalizer>=3.1.0",
+  "magika>=0.5.1",
+  "requests>=2.28.2",
+  "tabulate>=0.9.0",
+]
+
+[project.optional-dependencies]
+docling = [
+  "docling>=2.14.0",
+]
+llm = [
+  "openai>=1.0.0",
+  "azure-cognitiveservices-speech>=1.34.0",
+]
+audio = [
+  "SpeechRecognition>=3.10.0",
+  "pydub>=0.25.1",
+]
+image = [
+  "pillow>=9.5.0",
+  "pytesseract>=0.3.10",
+  "easyocr>=1.7.1",  # Korean OCR support
+]
+pdf = [
+  "pdfplumber>=0.10.2",
+  "PyPDF2>=3.0.1",
+]
+docx = [
+  "python-docx>=0.8.11",
+  "mammoth>=1.5.1",
+]
+pptx = [
+  "python-pptx>=0.6.21",
+]
+xlsx = [
+  "openpyxl>=3.0.10",
+  "pandas>=1.5.3",
+  "xlrd>=2.0.1",
+]
+outlook = [
+  "extract-msg>=0.41.1",
+]
+rss = [
+  "feedparser>=6.0.10",
+]
+youtube = [
+  "youtube-transcript-api>=0.6.0",
+]
+epub = [
+  "ebooklib>=0.18",
+]
+zip = [
+  "rarfile>=4.0",
+  "py7zr>=0.20.0",
+]
+korean = [
+  "konlpy>=0.6.0",
+  "soynlp>=0.0.493",
+  "kiwipiepy>=0.17.1",
+]
+dev = [
+  "ipykernel",
+  "pytest>=7.2.2",
+  "hatch",
+  "mypy>=1.0.0",
+]
+all = [
+  "voidlight-markitdown[llm,audio,image,pdf,docx,pptx,xlsx,outlook,rss,youtube,epub,zip,korean]",
+]
+
+[project.urls]
+Documentation = "https://github.com/voidlight/voidlight_markitdown#readme"
+Issues = "https://github.com/voidlight/voidlight_markitdown/issues"
+Source = "https://github.com/voidlight/voidlight_markitdown"
+
+[tool.hatch.version]
+path = "src/voidlight_markitdown/__about__.py"
+
+[project.scripts]
+voidlight-markitdown = "voidlight_markitdown.__main__:main"
+
+[tool.hatch.envs.types]
+extra-dependencies = [
+  "mypy>=1.0.0",
+]
+[tool.hatch.envs.types.scripts]
+check = "mypy --install-types --non-interactive {args:src/voidlight_markitdown tests}"
+
+[tool.coverage.run]
+source_pkgs = ["voidlight_markitdown", "tests"]
+branch = true
+parallel = true
+omit = [
+  "src/voidlight_markitdown/__about__.py",
+]
+
+[tool.coverage.paths]
+voidlight_markitdown = ["src/voidlight_markitdown", "*/voidlight_markitdown/src/voidlight_markitdown"]
+tests = ["tests", "*/voidlight_markitdown/tests"]
+
+[tool.coverage.report]
+exclude_lines = [
+  "no cov",
+  "if __name__ == .__main__.:",
+  "if TYPE_CHECKING:",
+]
+
+[tool.hatch.build.targets.sdist]
+include = [
+    "src/voidlight_markitdown",
+    "README.md",
+    "ThirdPartyNotices.md",
+]
