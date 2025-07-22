@@ -74,7 +74,7 @@ class TestKoreanNLPFeatures:
         # Even without NLP libraries, should provide basic POS tags
         token_text, pos = tokens[0]
         assert token_text == "한글"
-        assert pos in ['NN', 'NNP', 'UNK']  # Basic POS guessing
+        assert pos in ['NN', 'NNP', 'NNG', 'UNK']  # Basic POS guessing or Kiwi tags
     
     def test_spacing_correction(self):
         """Test Korean spacing correction."""
@@ -336,15 +336,15 @@ class TestKoreanNLPErrorHandling:
         """Test handling of malformed Unicode."""
         # Text with potential Unicode issues
         texts = [
-            "안\u200b녕하세요",  # Zero-width space
-            "안\ufeff녕하세요",  # BOM
-            "안\u00a0녕하세요",  # Non-breaking space
+            ("안\u200b녕하세요", "안녕하세요"),  # Zero-width space - should be removed
+            ("안\ufeff녕하세요", "안녕하세요"),  # BOM - should be removed
+            ("안\u00a0녕하세요", "안 녕하세요"),  # Non-breaking space - should be normalized to space
         ]
         
-        for text in texts:
-            normalized = self.processor.normalize_korean_text(text)
-            # Should remove problematic characters
-            assert len(normalized) < len(text)
+        for original, expected in texts:
+            normalized = self.processor.normalize_korean_text(original)
+            # Should handle problematic characters properly
+            assert normalized == expected
             assert '안' in normalized and '녕하세요' in normalized
 
 

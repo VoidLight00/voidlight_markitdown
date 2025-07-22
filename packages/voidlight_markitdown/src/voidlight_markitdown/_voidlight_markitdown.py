@@ -19,6 +19,7 @@ import codecs
 from ._stream_info import StreamInfo
 from ._uri_utils import parse_data_uri, file_uri_to_path
 from ._korean_utils import KoreanTextProcessor
+from ._logging import get_logger, log_performance, LoggingMixin, setup_logging
 
 from .converters import (
     PlainTextConverter,
@@ -91,7 +92,7 @@ class ConverterRegistration:
     priority: float
 
 
-class VoidLightMarkItDown:
+class VoidLightMarkItDown(LoggingMixin):
     """(In preview) An extremely simple text-based document reader, suitable for LLM use.
     This reader will convert common file-types or webpages to Markdown.
     
@@ -111,8 +112,19 @@ class VoidLightMarkItDown:
         self._korean_mode = korean_mode
         self._normalize_korean = normalize_korean
         
+        # Initialize logging
+        self.log_info(
+            "Initializing VoidLightMarkItDown",
+            korean_mode=korean_mode,
+            normalize_korean=normalize_korean,
+            enable_builtins=enable_builtins,
+            enable_plugins=enable_plugins
+        )
+        
         # Initialize Korean processor if in Korean mode
         self._korean_processor = KoreanTextProcessor() if korean_mode else None
+        if self._korean_processor:
+            self.log_debug("Korean text processor initialized")
 
         requests_session = kwargs.get("requests_session")
         if requests_session is None:
@@ -263,42 +275,47 @@ class VoidLightMarkItDown:
             - stream_info: optional stream info to use for the conversion. If None, infer from source
             - kwargs: additional arguments to pass to the converter
         """
+        
+        # Log conversion start
+        source_type = type(source).__name__
+        self.log_info(f"Starting conversion", source_type=source_type)
+        
+        with log_performance(self.logger, "convert", source_type=source_type):
+            # Local path or url
+            if isinstance(source, str):
+                if (
+                    source.startswith("http:")
+                    or source.startswith("https:")
+                    or source.startswith("file:")
+                    or source.startswith("data:")
+                ):
+                    # Rename the url argument to mock_url
+                    # (Deprecated -- use stream_info)
+                    _kwargs = {k: v for k, v in kwargs.items()}
+                    if "url" in _kwargs:
+                        _kwargs["mock_url"] = _kwargs["url"]
+                        del _kwargs["url"]
 
-        # Local path or url
-        if isinstance(source, str):
-            if (
-                source.startswith("http:")
-                or source.startswith("https:")
-                or source.startswith("file:")
-                or source.startswith("data:")
-            ):
-                # Rename the url argument to mock_url
-                # (Deprecated -- use stream_info)
-                _kwargs = {k: v for k, v in kwargs.items()}
-                if "url" in _kwargs:
-                    _kwargs["mock_url"] = _kwargs["url"]
-                    del _kwargs["url"]
-
-                return self.convert_uri(source, stream_info=stream_info, **_kwargs)
-            else:
+                    return self.convert_uri(source, stream_info=stream_info, **_kwargs)
+                else:
+                    return self.convert_local(source, stream_info=stream_info, **kwargs)
+            # Path object
+            elif isinstance(source, Path):
                 return self.convert_local(source, stream_info=stream_info, **kwargs)
-        # Path object
-        elif isinstance(source, Path):
-            return self.convert_local(source, stream_info=stream_info, **kwargs)
-        # Request response
-        elif isinstance(source, requests.Response):
-            return self.convert_response(source, stream_info=stream_info, **kwargs)
-        # Binary stream
-        elif (
-            hasattr(source, "read")
-            and callable(source.read)
-            and not isinstance(source, io.TextIOBase)
-        ):
-            return self.convert_stream(source, stream_info=stream_info, **kwargs)
-        else:
-            raise TypeError(
-                f"Invalid source type: {type(source)}. Expected str, requests.Response, BinaryIO."
-            )
+            # Request response
+            elif isinstance(source, requests.Response):
+                return self.convert_response(source, stream_info=stream_info, **kwargs)
+            # Binary stream
+            elif (
+                hasattr(source, "read")
+                and callable(source.read)
+                and not isinstance(source, io.TextIOBase)
+            ):
+                return self.convert_stream(source, stream_info=stream_info, **kwargs)
+            else:
+                raise TypeError(
+                    f"Invalid source type: {type(source)}. Expected str, requests.Response, BinaryIO."
+                )
 
     def convert_local(
         self,
@@ -540,6 +557,12 @@ class VoidLightMarkItDown:
         self, *, file_stream: BinaryIO, stream_info_guesses: List[StreamInfo], **kwargs
     ) -> DocumentConverterResult:
         res: Optional[DocumentConverterResult] = None
+        
+        self.log_debug(
+            "_convert called",
+            num_guesses=len(stream_info_guesses),
+            num_converters=len(self._converters)
+        )
 
         # Keep track of which converters throw exceptions
         failed_attempts: List[FailedConversionAttempt] = []
@@ -606,9 +629,28 @@ class VoidLightMarkItDown:
 
                 # Attempt the conversion
                 if _accepts:
+                    converter_name = type(converter).__name__
+                    self.log_debug(
+                        f"Attempting conversion with {converter_name}",
+                        converter=converter_name,
+                        stream_info=stream_info.__dict__ if stream_info else None
+                    )
+                    
                     try:
                         res = converter.convert(file_stream, stream_info, **_kwargs)
-                    except Exception:
+                        if res:
+                            self.log_info(
+                                f"Successfully converted with {converter_name}",
+                                converter=converter_name,
+                                result_size=len(res.markdown) if res.markdown else 0
+                            )
+                    except Exception as e:
+                        self.log_warning(
+                            f"Converter {converter_name} failed",
+                            converter=converter_name,
+                            error=str(e),
+                            exc_info=True
+                        )
                         failed_attempts.append(
                             FailedConversionAttempt(
                                 converter=converter, exc_info=sys.exc_info()
@@ -620,6 +662,7 @@ class VoidLightMarkItDown:
                 if res is not None:
                     # Apply Korean processing if enabled
                     if self._korean_mode and self._korean_processor:
+                        self.log_debug("Applying Korean text processing")
                         res.markdown = self._korean_processor.preprocess_korean_document(
                             res.markdown, normalize=self._normalize_korean
                         )
@@ -629,13 +672,27 @@ class VoidLightMarkItDown:
                         [line.rstrip() for line in re.split(r"\r?\n", res.markdown)]
                     )
                     res.markdown = re.sub(r"\n{3,}", "\n\n", res.markdown)
+                    
+                    self.log_info(
+                        "Conversion completed successfully",
+                        final_size=len(res.markdown),
+                        korean_mode=self._korean_mode
+                    )
                     return res
 
         # If we got this far without success, report any exceptions
         if len(failed_attempts) > 0:
+            self.log_error(
+                f"Conversion failed after {len(failed_attempts)} attempts",
+                num_failed_attempts=len(failed_attempts)
+            )
             raise FileConversionException(attempts=failed_attempts)
 
         # Nothing can handle it!
+        self.log_error(
+            "No converter could handle the file",
+            num_converters_tried=len(self._converters)
+        )
         raise UnsupportedFormatException(
             "Could not convert stream to Markdown. No converter attempted a conversion, suggesting that the filetype is simply not supported."
         )

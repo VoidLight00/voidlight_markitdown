@@ -52,11 +52,22 @@ pip install kiwipiepy
 ### Full Setup (All features)
 
 1. **Install Java** (for KoNLPy):
-   - macOS: `brew install openjdk@11`
+   - macOS: `brew install openjdk`
    - Ubuntu/Debian: `sudo apt-get install openjdk-11-jdk`
    - Windows: Download from [AdoptOpenJDK](https://adoptopenjdk.net/)
 
-2. **Install Python packages**:
+2. **Set up Java environment** (macOS with Homebrew):
+   ```bash
+   export PATH="/opt/homebrew/opt/openjdk/bin:$PATH"
+   export JAVA_HOME="/opt/homebrew/opt/openjdk/libexec/openjdk.jdk/Contents/Home"
+   ```
+   
+   Or use the provided setup script:
+   ```bash
+   source setup_java_env.sh
+   ```
+
+3. **Install Python packages**:
    ```bash
    # Core NLP libraries
    pip install kiwipiepy konlpy JPype1
@@ -64,6 +75,8 @@ pip install kiwipiepy
    # Optional enhancement libraries
    pip install soynlp py-hanspell jamo hanja
    ```
+   
+   Note: The package includes automatic compatibility handling for JPype1 import issues.
 
 ## Dependency Details
 

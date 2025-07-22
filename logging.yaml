@@ -1,0 +1,85 @@
+# VoidLight MarkItDown Logging Configuration
+# This file can be used to customize logging behavior
+
+version: 1
+disable_existing_loggers: false
+
+formatters:
+  default:
+    format: '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+    datefmt: '%Y-%m-%d %H:%M:%S'
+  
+  detailed:
+    format: '%(asctime)s - %(name)s - %(levelname)s - [%(filename)s:%(lineno)d] - %(funcName)s() - %(message)s'
+    datefmt: '%Y-%m-%d %H:%M:%S'
+  
+  performance:
+    format: '%(asctime)s - %(name)s - PERF - %(message)s'
+    datefmt: '%Y-%m-%d %H:%M:%S'
+  
+  json:
+    class: voidlight_markitdown._logging.StructuredFormatter
+
+handlers:
+  console:
+    class: logging.StreamHandler
+    level: INFO
+    formatter: default
+    stream: ext://sys.stdout
+  
+  file:
+    class: logging.handlers.RotatingFileHandler
+    level: DEBUG
+    formatter: detailed
+    filename: voidlight_markitdown.log
+    maxBytes: 10485760  # 10MB
+    backupCount: 5
+    encoding: utf-8
+  
+  performance_file:
+    class: logging.handlers.RotatingFileHandler
+    level: INFO
+    formatter: performance
+    filename: voidlight_markitdown_performance.log
+    maxBytes: 10485760  # 10MB
+    backupCount: 3
+    encoding: utf-8
+  
+  error_file:
+    class: logging.handlers.RotatingFileHandler
+    level: ERROR
+    formatter: detailed
+    filename: voidlight_markitdown_errors.log
+    maxBytes: 5242880  # 5MB
+    backupCount: 3
+    encoding: utf-8
+
+loggers:
+  voidlight_markitdown:
+    level: INFO
+    handlers: [console, file]
+    propagate: false
+  
+  voidlight_markitdown.converters:
+    level: DEBUG
+    handlers: [console, file]
+    propagate: false
+  
+  voidlight_markitdown.korean:
+    level: DEBUG
+    handlers: [console, file]
+    propagate: false
+  
+  voidlight_markitdown.performance:
+    level: INFO
+    handlers: [performance_file]
+    propagate: false
+  
+  voidlight_markitdown.mcp:
+    level: INFO
+    handlers: [console, file]
+    propagate: false
+
+root:
+  level: WARNING
+  handlers: [console, error_file]

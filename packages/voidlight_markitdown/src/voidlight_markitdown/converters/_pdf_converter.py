@@ -3,10 +3,10 @@ import io
 
 from typing import BinaryIO, Any
 
-
 from .._base_converter import DocumentConverter, DocumentConverterResult
 from .._stream_info import StreamInfo
 from .._exceptions import MissingDependencyException, MISSING_DEPENDENCY_MESSAGE
+from .._logging import LoggingMixin, log_converter_metrics
 
 
 # Try loading optional (but in this case, required) dependencies
@@ -28,7 +28,7 @@ ACCEPTED_MIME_TYPE_PREFIXES = [
 ACCEPTED_FILE_EXTENSIONS = [".pdf"]
 
 
-class PdfConverter(DocumentConverter):
+class PdfConverter(DocumentConverter, LoggingMixin):
     """
     Converts PDFs to Markdown. Most style information is ignored, so the results are essentially plain-text.
     """
@@ -51,6 +51,7 @@ class PdfConverter(DocumentConverter):
 
         return False
 
+    @log_converter_metrics("pdf")
     def convert(
         self,
         file_stream: BinaryIO,
@@ -73,14 +74,19 @@ class PdfConverter(DocumentConverter):
 
         # Check for Korean mode
         korean_mode = kwargs.get("korean_mode", False)
+        if korean_mode:
+            self.log_debug("PDF conversion in Korean mode")
         
         assert isinstance(file_stream, io.IOBase)  # for mypy
         
         # Extract text from PDF
+        self.log_debug("Extracting text from PDF using pdfminer")
         text = pdfminer.high_level.extract_text(file_stream)
         
         # If Korean mode is enabled, we could add Korean-specific PDF processing here
         # For now, pdfminer should handle Korean text extraction reasonably well
+        
+        self.log_debug(f"Extracted {len(text)} characters from PDF")
         
         return DocumentConverterResult(
             markdown=text,

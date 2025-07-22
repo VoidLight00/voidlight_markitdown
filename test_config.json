@@ -1,0 +1,30 @@
+{
+  "test_suites": ["enhanced", "comprehensive"],
+  "timeout_minutes": 30,
+  "retry_failed": true,
+  "max_retries": 2,
+  "email_notifications": false,
+  "slack_notifications": false,
+  "save_artifacts": true,
+  "artifact_dir": "test_artifacts",
+  "verbose": true,
+  "performance_thresholds": {
+    "initialization_time": 2.0,
+    "tool_call_time": 5.0,
+    "concurrent_clients": 10,
+    "memory_usage_mb": 500,
+    "response_time_p95": 3.0
+  },
+  "stress_test": {
+    "enabled": true,
+    "duration_seconds": 30,
+    "concurrent_clients": 10,
+    "requests_per_client": 100
+  },
+  "korean_test": {
+    "test_normalization": true,
+    "test_mixed_scripts": true,
+    "test_special_characters": true,
+    "test_encodings": ["utf-8", "euc-kr", "cp949"]
+  }
+}

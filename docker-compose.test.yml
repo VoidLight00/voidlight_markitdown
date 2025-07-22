@@ -1,0 +1,44 @@
+version: '3.8'
+
+services:
+  mcp-integration-tests:
+    build:
+      context: .
+      dockerfile: Dockerfile.test
+    volumes:
+      - ./test_artifacts:/app/test_artifacts
+      - ./test_results:/app/test_results
+    environment:
+      - VOIDLIGHT_LOG_LEVEL=INFO
+      - TEST_MODE=docker
+    command: python run_integration_tests_automated.py --config test_config.json
+    
+  mcp-server-stdio:
+    build:
+      context: .
+      dockerfile: Dockerfile.test
+    command: /app/mcp-env/bin/voidlight-markitdown-mcp
+    stdin_open: true
+    tty: true
+    
+  mcp-server-http:
+    build:
+      context: .
+      dockerfile: Dockerfile.test
+    command: /app/mcp-env/bin/voidlight-markitdown-mcp --http --host 0.0.0.0 --port 3001
+    ports:
+      - "3001:3001"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3001/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      
+  performance-monitor:
+    image: prom/prometheus:latest
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    ports:
+      - "9090:9090"
+    depends_on:
+      - mcp-server-http

@@ -1,0 +1,43 @@
+# Dockerfile for MCP Integration Testing
+FROM python:3.11-slim
+
+# Install system dependencies
+RUN apt-get update && apt-get install -y \
+    curl \
+    git \
+    build-essential \
+    locales \
+    && rm -rf /var/lib/apt/lists/*
+
+# Set up locale for Korean text support
+RUN sed -i '/en_US.UTF-8/s/^# //g' /etc/locale.gen && \
+    sed -i '/ko_KR.UTF-8/s/^# //g' /etc/locale.gen && \
+    locale-gen
+ENV LANG=en_US.UTF-8
+ENV LC_ALL=en_US.UTF-8
+
+# Create app directory
+WORKDIR /app
+
+# Copy project files
+COPY . /app/
+
+# Create virtual environment
+RUN python -m venv /app/mcp-env
+
+# Install dependencies
+RUN /app/mcp-env/bin/pip install --upgrade pip && \
+    /app/mcp-env/bin/pip install -e packages/voidlight_markitdown && \
+    /app/mcp-env/bin/pip install -e packages/voidlight_markitdown-mcp && \
+    /app/mcp-env/bin/pip install pytest pytest-asyncio pytest-cov requests psutil pyyaml
+
+# Set environment variables
+ENV PYTHONPATH=/app
+ENV VOIDLIGHT_LOG_LEVEL=INFO
+ENV PATH="/app/mcp-env/bin:$PATH"
+
+# Create test artifacts directory
+RUN mkdir -p /app/test_artifacts
+
+# Default command runs all integration tests
+CMD ["python", "run_integration_tests_automated.py", "--config", "test_config.json"]

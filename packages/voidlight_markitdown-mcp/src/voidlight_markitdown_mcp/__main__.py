@@ -1,6 +1,7 @@
 import contextlib
 import sys
 import os
+import logging
 from collections.abc import AsyncIterator
 from mcp.server.fastmcp import FastMCP
 from starlette.applications import Starlette
@@ -11,16 +12,27 @@ from starlette.types import Receive, Scope, Send
 from mcp.server import Server
 from mcp.server.streamable_http_manager import StreamableHTTPSessionManager
 from voidlight_markitdown import VoidLightMarkItDown
+from voidlight_markitdown._logging import setup_logging, get_logger
 import uvicorn
 
 # Initialize FastMCP server for VoidLight MarkItDown (SSE)
 mcp = FastMCP("voidlight_markitdown")
 
+# Setup logging for MCP server
+logger = get_logger("voidlight_markitdown.mcp")
+
 
 @mcp.tool()
 async def convert_to_markdown(uri: str) -> str:
     """Convert a resource described by an http:, https:, file: or data: URI to markdown with enhanced Korean support"""
-    return VoidLightMarkItDown(enable_plugins=check_plugins_enabled()).convert_uri(uri).markdown
+    logger.info(f"MCP: Converting URI to markdown", uri=uri)
+    try:
+        result = VoidLightMarkItDown(enable_plugins=check_plugins_enabled()).convert_uri(uri).markdown
+        logger.info(f"MCP: Conversion successful", uri=uri, result_size=len(result))
+        return result
+    except Exception as e:
+        logger.error(f"MCP: Conversion failed", uri=uri, error=str(e), exc_info=True)
+        raise
 
 
 @mcp.tool()
@@ -31,12 +43,19 @@ async def convert_korean_document(uri: str, normalize_korean: bool = True) -> st
         uri: Document URI (http:, https:, file: or data:)
         normalize_korean: Whether to normalize Korean text (default: True)
     """
-    converter = VoidLightMarkItDown(
-        enable_plugins=check_plugins_enabled(),
-        korean_mode=True,
-        normalize_korean=normalize_korean
-    )
-    return converter.convert_uri(uri).markdown
+    logger.info(f"MCP: Converting Korean document", uri=uri, normalize_korean=normalize_korean)
+    try:
+        converter = VoidLightMarkItDown(
+            enable_plugins=check_plugins_enabled(),
+            korean_mode=True,
+            normalize_korean=normalize_korean
+        )
+        result = converter.convert_uri(uri).markdown
+        logger.info(f"MCP: Korean conversion successful", uri=uri, result_size=len(result))
+        return result
+    except Exception as e:
+        logger.error(f"MCP: Korean conversion failed", uri=uri, error=str(e), exc_info=True)
+        raise
 
 
 def check_plugins_enabled() -> bool:
@@ -97,6 +116,19 @@ def create_starlette_app(mcp_server: Server, *, debug: bool = False) -> Starlett
 # Main entry point
 def main():
     import argparse
+    
+    # Setup logging based on environment variable
+    log_level = os.getenv("VOIDLIGHT_LOG_LEVEL", "INFO")
+    log_file = os.getenv("VOIDLIGHT_LOG_FILE")
+    
+    setup_logging(
+        level=log_level,
+        log_file=log_file,
+        console=True,
+        detailed=log_level == "DEBUG"
+    )
+    
+    logger.info("Starting VoidLight MarkItDown MCP server")
 
     mcp_server = mcp._mcp_server
 
@@ -129,13 +161,18 @@ def main():
         sys.exit(1)
 
     if use_http:
+        host = args.host if args.host else "127.0.0.1"
+        port = args.port if args.port else 3001
+        logger.info(f"Starting HTTP/SSE server on {host}:{port}")
+        
         starlette_app = create_starlette_app(mcp_server, debug=True)
         uvicorn.run(
             starlette_app,
-            host=args.host if args.host else "127.0.0.1",
-            port=args.port if args.port else 3001,
+            host=host,
+            port=port,
         )
     else:
+        logger.info("Starting STDIO server")
         mcp.run()
 
 

@@ -1,0 +1,125 @@
+name: MCP Integration Tests
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+  schedule:
+    # Run tests daily at 2 AM UTC
+    - cron: '0 2 * * *'
+  workflow_dispatch:
+    inputs:
+      test_suites:
+        description: 'Test suites to run (space-separated)'
+        required: false
+        default: 'enhanced comprehensive'
+
+jobs:
+  integration-tests:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ['3.9', '3.10', '3.11']
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ matrix.python-version }}
+    
+    - name: Cache virtual environment
+      uses: actions/cache@v3
+      with:
+        path: mcp-env
+        key: ${{ runner.os }}-python-${{ matrix.python-version }}-venv-${{ hashFiles('**/requirements*.txt') }}
+        restore-keys: |
+          ${{ runner.os }}-python-${{ matrix.python-version }}-venv-
+    
+    - name: Create virtual environment
+      run: |
+        python -m venv mcp-env
+        source mcp-env/bin/activate
+        pip install --upgrade pip
+    
+    - name: Install dependencies
+      run: |
+        source mcp-env/bin/activate
+        pip install -e packages/voidlight_markitdown
+        pip install -e packages/voidlight_markitdown-mcp
+        pip install pytest pytest-asyncio pytest-cov requests psutil pyyaml
+    
+    - name: Run integration tests
+      run: |
+        source mcp-env/bin/activate
+        python run_integration_tests_automated.py --config test_config.json
+      env:
+        VOIDLIGHT_LOG_LEVEL: INFO
+    
+    - name: Upload test artifacts
+      if: always()
+      uses: actions/upload-artifact@v3
+      with:
+        name: test-artifacts-python${{ matrix.python-version }}
+        path: |
+          test_artifacts/
+          test_summary_*.json
+          integration_test_report_*.json
+    
+    - name: Upload coverage reports
+      if: success()
+      uses: codecov/codecov-action@v3
+      with:
+        file: ./coverage.xml
+        flags: integration-tests
+        name: mcp-integration-tests-python${{ matrix.python-version }}
+    
+    - name: Test Report
+      uses: dorny/test-reporter@v1
+      if: always()
+      with:
+        name: Integration Test Results - Python ${{ matrix.python-version }}
+        path: 'test_artifacts/**/test-results.xml'
+        reporter: java-junit
+        fail-on-error: false
+
+  performance-tests:
+    runs-on: ubuntu-latest
+    needs: integration-tests
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Set up Python 3.11
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+    
+    - name: Install dependencies
+      run: |
+        python -m venv mcp-env
+        source mcp-env/bin/activate
+        pip install -e packages/voidlight_markitdown
+        pip install -e packages/voidlight_markitdown-mcp
+        pip install pytest pytest-benchmark psutil
+    
+    - name: Run performance benchmarks
+      run: |
+        source mcp-env/bin/activate
+        python test_mcp_integration_enhanced.py --suites enhanced --timeout 60
+    
+    - name: Compare with baseline
+      run: |
+        # Compare performance metrics with baseline
+        # This is a placeholder - implement actual comparison
+        echo "Performance comparison would go here"
+    
+    - name: Upload performance results
+      uses: actions/upload-artifact@v3
+      with:
+        name: performance-results
+        path: |
+          test_artifacts/
+          performance_*.json

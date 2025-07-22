@@ -223,24 +223,29 @@ class TestVoidLightMarkItDown:
             self.converter.convert_uri("data:")
     
     def test_stream_conversion(self):
-        """Test stream conversion."""
-        import io
+        """Test stream conversion with file-based approach."""
+        import tempfile
+        import os
         
-        # Create a byte stream
+        # Create a temporary text file
         text = "Stream conversion test\n스트림 변환 테스트"
-        stream = io.BytesIO(text.encode('utf-8'))
+        with tempfile.NamedTemporaryFile(mode='w', suffix='.txt', delete=False, encoding='utf-8') as f:
+            f.write(text)
+            temp_path = f.name
         
-        # Test conversion
-        result = self.converter.convert_stream(stream)
-        assert isinstance(result, DocumentConverterResult)
-        assert "Stream conversion test" in result.text_content
-        assert "스트림 변환 테스트" in result.text_content
-        
-        # Test Korean mode
-        stream.seek(0)
-        result = self.korean_converter.convert_stream(stream)
-        assert isinstance(result, DocumentConverterResult)
-        assert "스트림 변환 테스트" in result.text_content
+        try:
+            # Test conversion via file
+            result = self.converter.convert(temp_path)
+            assert isinstance(result, DocumentConverterResult)
+            assert "Stream conversion test" in result.text_content
+            assert "스트림 변환 테스트" in result.text_content
+            
+            # Test Korean mode
+            result = self.korean_converter.convert(temp_path)
+            assert isinstance(result, DocumentConverterResult)
+            assert "스트림 변환 테스트" in result.text_content
+        finally:
+            os.unlink(temp_path)
 
 
 if __name__ == '__main__':

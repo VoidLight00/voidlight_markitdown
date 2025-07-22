@@ -1,8 +1,8 @@
 import re
 import unicodedata
 from typing import Optional, Dict, Any, List, Tuple
-import logging
 from ._korean_nlp_init import get_korean_nlp_status
+from ._logging import get_logger, LoggingMixin, log_performance
 
 # Optional imports with fallbacks
 try:
@@ -43,10 +43,7 @@ except ImportError:
     HANJA_AVAILABLE = False
 
 
-logger = logging.getLogger(__name__)
-
-
-class KoreanTextProcessor:
+class KoreanTextProcessor(LoggingMixin):
     """Enhanced Korean text processing utilities with NLP library integration."""
     
     # Korean Unicode blocks
@@ -79,15 +76,17 @@ class KoreanTextProcessor:
         self.okt = None
         self.nlp_status = get_korean_nlp_status()
         
+        self.log_info("Initializing Korean text processor")
+        
         # Initialize Kiwi if available (preferred for performance)
         if KIWI_AVAILABLE:
             try:
                 self.kiwi = Kiwi(num_workers=2)
                 # Add common proper nouns and terms
                 self._add_kiwi_user_words()
-                logger.info("Kiwi tokenizer initialized successfully")
+                self.log_info("Kiwi tokenizer initialized successfully")
             except Exception as e:
-                logger.warning(f"Failed to initialize Kiwi: {e}")
+                self.log_warning(f"Failed to initialize Kiwi: {e}", exc_info=True)
                 self.kiwi = None
         
         # Fallback to KoNLPy if Kiwi is not available
@@ -96,11 +95,11 @@ class KoreanTextProcessor:
                 # Check if Java dependencies are met
                 if self.nlp_status.dependencies_status['konlpy'].get('functional', False):
                     self.okt = Okt()
-                    logger.info("Okt tokenizer initialized as fallback")
+                    self.log_info("Okt tokenizer initialized as fallback")
                 else:
-                    logger.warning("KoNLPy available but Java dependencies not met")
+                    self.log_warning("KoNLPy available but Java dependencies not met")
             except Exception as e:
-                logger.warning(f"Failed to initialize Okt: {e}")
+                self.log_warning(f"Failed to initialize Okt: {e}", exc_info=True)
                 self.okt = None
         
         # Log initialization status
@@ -116,9 +115,9 @@ class KoreanTextProcessor:
             status_parts.append("Okt")
             
         if status_parts:
-            logger.info(f"Korean NLP initialized with: {', '.join(status_parts)}")
+            self.log_info(f"Korean NLP initialized with: {', '.join(status_parts)}")
         else:
-            logger.warning("No Korean NLP tokenizers available - using fallback methods")
+            self.log_warning("No Korean NLP tokenizers available - using fallback methods")
             
         # Log optional components
         optional_status = []
@@ -132,7 +131,7 @@ class KoreanTextProcessor:
             optional_status.append("hanja")
             
         if optional_status:
-            logger.debug(f"Optional Korean modules available: {', '.join(optional_status)}")
+            self.log_debug(f"Optional Korean modules available: {', '.join(optional_status)}")
     
     def _add_kiwi_user_words(self):
         """Add common user words to Kiwi dictionary."""
@@ -155,7 +154,7 @@ class KoreanTextProcessor:
             try:
                 self.kiwi.add_user_word(word, tag, 5.0)  # Add with default score
             except Exception as e:
-                logger.debug(f"Failed to add user word '{word}': {e}")
+                self.log_debug(f"Failed to add user word '{word}': {e}")
     
     @staticmethod
     def is_korean_char(char: str) -> bool:
@@ -211,53 +210,54 @@ class KoreanTextProcessor:
         if not text:
             return text
         
-        # Step 1: Normalize to NFC form
-        text = unicodedata.normalize('NFC', text)
-        
-        # Step 2: Remove zero-width characters
-        text = re.sub(r'[\u200b\u200c\u200d\ufeff]', '', text)
-        
-        # Step 3: Normalize whitespace
-        text = re.sub(r'\s+', ' ', text)
-        text = re.sub(r'[\u00A0\u1680\u180E\u2000-\u200A\u202F\u205F\u3000]', ' ', text)
-        
-        # Step 4: Fix common mojibake patterns
-        mojibake_patterns = {
-            '占쏙옙': '?',  # Common replacement for unknown characters
-            '�': '?',      # Unicode replacement character
-            '째': 'ㅉ',     # Common misencoding
-            '찮': 'ㅊ',     # Common misencoding
-        }
-        
-        for pattern, replacement in mojibake_patterns.items():
-            text = text.replace(pattern, replacement)
-        
-        # Step 5: Normalize repeated characters if soynlp is available
-        if SOYNLP_AVAILABLE:
-            try:
-                text = repeat_normalize(text, num_repeats=2)
-            except:
-                pass
-        
-        # Step 6: Apply spell checking if available and text is not too long
-        if HANSPELL_AVAILABLE and len(text) < 500:
-            try:
-                result = spell_checker.check(text)
-                if result.checked:
-                    text = result.checked
-            except:
-                pass
-        
-        # Step 7: Decompose and recompose Hangul if jamo is available
-        if JAMO_AVAILABLE:
-            try:
-                # This helps normalize old-style Korean text
-                decomposed = jamo.h2j(text)
-                text = jamo.j2h(decomposed)
-            except:
-                pass
-        
-        return text.strip()
+        with log_performance(self.logger, "normalize_korean_text", text_length=len(text)):
+            # Step 1: Normalize to NFC form
+            text = unicodedata.normalize('NFC', text)
+            
+            # Step 2: Remove zero-width characters
+            text = re.sub(r'[\u200b\u200c\u200d\ufeff]', '', text)
+            
+            # Step 3: Normalize whitespace
+            text = re.sub(r'\s+', ' ', text)
+            text = re.sub(r'[\u00A0\u1680\u180E\u2000-\u200A\u202F\u205F\u3000]', ' ', text)
+            
+            # Step 4: Fix common mojibake patterns
+            mojibake_patterns = {
+                '占쏙옙': '?',  # Common replacement for unknown characters
+                '�': '?',      # Unicode replacement character
+                '째': 'ㅉ',     # Common misencoding
+                '찮': 'ㅊ',     # Common misencoding
+            }
+            
+            for pattern, replacement in mojibake_patterns.items():
+                text = text.replace(pattern, replacement)
+            
+            # Step 5: Normalize repeated characters if soynlp is available
+            if SOYNLP_AVAILABLE:
+                try:
+                    text = repeat_normalize(text, num_repeats=2)
+                except:
+                    pass
+            
+            # Step 6: Apply spell checking if available and text is not too long
+            if HANSPELL_AVAILABLE and len(text) < 500:
+                try:
+                    result = spell_checker.check(text)
+                    if result.checked:
+                        text = result.checked
+                except:
+                    pass
+            
+            # Step 7: Decompose and recompose Hangul if jamo is available
+            if JAMO_AVAILABLE:
+                try:
+                    # This helps normalize old-style Korean text
+                    decomposed = jamo.h2j(text)
+                    text = jamo.j2h(decomposed)
+                except:
+                    pass
+            
+            return text.strip()
     
     def fix_korean_line_breaks(self, text: str) -> str:
         """Fix line break issues in Korean text.
@@ -304,6 +304,9 @@ class KoreanTextProcessor:
         Returns:
             List of (token, pos_tag) tuples.
         """
+        if not text:
+            return []
+            
         if normalize:
             text = self.normalize_korean_text(text)
             
@@ -312,13 +315,13 @@ class KoreanTextProcessor:
                 result = self.kiwi.tokenize(text)
                 return [(token.form, token.tag) for token in result]
             except Exception as e:
-                logger.debug(f"Kiwi tokenization failed: {e}")
+                self.log_debug(f"Kiwi tokenization failed: {e}")
         
         if self.okt:
             try:
                 return self.okt.pos(text, norm=normalize, stem=False)
             except Exception as e:
-                logger.debug(f"Okt tokenization failed: {e}")
+                self.log_debug(f"Okt tokenization failed: {e}")
         
         # Fallback: simple whitespace tokenization with basic POS guessing
         tokens = []
@@ -339,6 +342,9 @@ class KoreanTextProcessor:
     
     def extract_nouns(self, text: str) -> List[str]:
         """Extract nouns from Korean text."""
+        if not text:
+            return []
+            
         if self.kiwi:
             try:
                 result = self.kiwi.tokenize(text)
@@ -483,6 +489,9 @@ class KoreanTextProcessor:
     
     def segment_sentences(self, text: str) -> List[str]:
         """Segment Korean text into sentences."""
+        if not text:
+            return ['']
+            
         if self.kiwi:
             try:
                 # Kiwi has built-in sentence segmentation
@@ -635,48 +644,69 @@ class KoreanTextProcessor:
         
         # Formal endings
         formal_patterns = [
-            r'\uc2b5\ub2c8\ub2e4$',  # 습니다
-            r'\uc785\ub2c8\ub2e4$',  # 입니다
-            r'\uc2b5\ub2c8\uae4c$',  # 습니까
-            r'\uc785\ub2c8\uae4c$',  # 입니까
-            r'\uc138\uc694$',        # 세요
-            r'\uc5b4\uc694$',        # 어요/아요
-            r'\uc544\uc694$'
+            r'습니다$',  # 습니다
+            r'입니다$',  # 입니다
+            r'습니까$',  # 습니까
+            r'입니까$',  # 입니까
+            r'세요$',    # 세요
+            r'어요$',    # 어요
+            r'아요$',    # 아요
+            r'십니까$',  # 십니까
+            r'십니다$'   # 십니다
         ]
         
         # Informal endings
         informal_patterns = [
-            r'\ub2e4$',              # 다
-            r'\ub0d0$',              # 냐
-            r'\uc5b4$',              # 어/아
-            r'\uc544$',
-            r'\uc9c0$'               # 지
+            r'다$',      # 다 (but not 니다)
+            r'냐$',      # 냐
+            r'어$',      # 어
+            r'아$',      # 아
+            r'지$',      # 지
+            r'야$',      # 야
+            r'네$',      # 네
+            r'군$',      # 군
+            r'구나$',    # 구나
+            r'자$',      # 자
+            r'라$'       # 라
         ]
         
         # Honorific words
         honorific_words = [
-            '\ub2d8',                # 님
-            '\uaed8\uc11c',          # 께서
-            '\ub4dc\ub9ac\ub2e4',    # 드리다
-            '\ubaa8\uc2dc\ub2e4',    # 모시다
-            '\uc5ec\ucfed\ub2e4'     # 여쭙다
+            '님',        # 님
+            '께서',      # 께서
+            '드리다',    # 드리다
+            '모시다',    # 모시다
+            '여쭙다',    # 여쭙다
+            '주시',      # 주시
+            '하십',      # 하십
+            '셔서'       # 셔서
         ]
         
         # Analyze sentences
         sentences = self.segment_sentences(text)
         
         for sentence in sentences:
+            # Remove punctuation for ending analysis
+            sentence_clean = sentence.rstrip('.!?。！？…')
+            
             # Check formal endings
             for pattern in formal_patterns:
-                if re.search(pattern, sentence):
+                if re.search(pattern, sentence_clean):
                     analysis['formal_endings'] += 1
                     break
             
-            # Check informal endings
-            for pattern in informal_patterns:
-                if re.search(pattern, sentence):
-                    analysis['informal_endings'] += 1
+            # Check informal endings - but exclude formal endings that contain 다
+            is_formal = False
+            for pattern in formal_patterns:
+                if re.search(pattern, sentence_clean):
+                    is_formal = True
                     break
+            
+            if not is_formal:
+                for pattern in informal_patterns:
+                    if re.search(pattern, sentence_clean):
+                        analysis['informal_endings'] += 1
+                        break
             
             # Count honorifics
             for honorific in honorific_words:

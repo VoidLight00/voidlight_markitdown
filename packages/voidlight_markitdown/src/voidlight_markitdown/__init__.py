@@ -15,6 +15,13 @@ from ._exceptions import (
     VoidLightMarkItDownException,
     FailedConversionAttempt,
 )
+from ._logging import (
+    setup_logging,
+    get_logger,
+    get_performance_logger,
+    log_performance,
+    LoggingMixin,
+)
 
 # Alias for compatibility
 MarkItDown = VoidLightMarkItDown
@@ -34,4 +41,10 @@ __all__ = [
     "VoidLightMarkItDownException",
     "FailedConversionAttempt",
     "MISSING_DEPENDENCY_MESSAGE",
+    # Logging utilities
+    "setup_logging",
+    "get_logger",
+    "get_performance_logger",
+    "log_performance",
+    "LoggingMixin",
 ]

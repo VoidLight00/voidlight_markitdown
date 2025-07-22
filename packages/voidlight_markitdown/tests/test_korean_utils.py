@@ -42,7 +42,7 @@ class TestKoreanTextProcessor:
         
         # Mixed text
         ratio = KoreanTextProcessor.detect_korean_ratio('Hello 안녕')
-        assert 0.3 < ratio < 0.4  # 2 Korean chars out of 7 total
+        assert 0.2 < ratio < 0.3  # 2 Korean chars out of 8 total (including space)
         
         # No Korean
         assert KoreanTextProcessor.detect_korean_ratio('Hello World') == 0.0
