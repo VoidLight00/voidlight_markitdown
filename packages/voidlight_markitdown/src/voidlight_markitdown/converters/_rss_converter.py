@@ -1,6 +1,6 @@
 from defusedxml import minidom
 from xml.dom.minidom import Document, Element
-from typing import BinaryIO, Any, Union
+from typing import BinaryIO, Any, Union, Optional
 from bs4 import BeautifulSoup
 
 from ._markdownify import _CustomMarkdownify
@@ -71,7 +71,7 @@ class RssConverter(DocumentConverter):
             file_stream.seek(cur_pos)
         return False
 
-    def _feed_type(self, doc: Any) -> str | None:
+    def _feed_type(self, doc: Any) -> Optional[str]:
         if doc.getElementsByTagName("rss"):
             return "rss"
         elif doc.getElementsByTagName("feed"):

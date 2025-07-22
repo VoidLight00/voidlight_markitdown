@@ -7,7 +7,7 @@ name = "voidlight-markitdown-mcp"
 dynamic = ["version"]
 description = 'An MCP server for the "voidlight_markitdown" library with enhanced Korean language support.'
 readme = "README.md"
-requires-python = ">=3.10"
+requires-python = ">=3.9"
 license = "MIT"
 keywords = ["korean", "markdown", "converter", "mcp", "한국어"]
 authors = [

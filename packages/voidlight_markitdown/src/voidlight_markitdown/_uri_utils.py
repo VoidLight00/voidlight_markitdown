@@ -1,77 +1,52 @@
 import base64
-import mimetypes
-from typing import Tuple, Optional
-from urllib.parse import urlparse, unquote
-from pathlib import Path
-import platform
+import os
+from typing import Tuple, Dict, Union, Optional
+from urllib.request import url2pathname
+from urllib.parse import urlparse, unquote_to_bytes
 
 
-def parse_data_uri(uri: str) -> Tuple[Optional[str], bytes]:
-    """Parse a data URI and return mime type and decoded data.
-    
-    Args:
-        uri: Data URI to parse
-        
-    Returns:
-        Tuple of (mime_type, data)
-    """
-    if not uri.startswith('data:'):
+def file_uri_to_path(file_uri: str) -> Tuple[Optional[str], str]:
+    """Convert a file URI to a local file path"""
+    parsed = urlparse(file_uri)
+    if parsed.scheme != "file":
+        raise ValueError(f"Not a file URL: {file_uri}")
+
+    netloc = parsed.netloc if parsed.netloc else None
+    path = os.path.abspath(url2pathname(parsed.path))
+    return netloc, path
+
+
+def parse_data_uri(uri: str) -> Tuple[Optional[str], Dict[str, str], bytes]:
+    if not uri.startswith("data:"):
         raise ValueError("Not a data URI")
-    
-    # Remove the data: prefix
-    uri_content = uri[5:]
-    
-    # Split at the comma
-    if ',' not in uri_content:
-        raise ValueError("Invalid data URI format")
-    
-    header, data_part = uri_content.split(',', 1)
-    
-    # Parse the header
-    mime_type = None
+
+    header, _, data = uri.partition(",")
+    if not _:
+        raise ValueError("Malformed data URI, missing ',' separator")
+
+    meta = header[5:]  # Strip 'data:'
+    parts = meta.split(";")
+
     is_base64 = False
-    
-    if header:
-        parts = header.split(';')
-        if parts[0] and '/' in parts[0]:
-            mime_type = parts[0]
-        
-        for part in parts[1:]:
-            if part.strip() == 'base64':
-                is_base64 = True
-    
-    # Decode the data
-    if is_base64:
-        data = base64.b64decode(data_part)
-    else:
-        data = unquote(data_part).encode('utf-8')
-    
-    return mime_type, data
+    # Ends with base64?
+    if parts[-1] == "base64":
+        parts.pop()
+        is_base64 = True
 
+    mime_type = None  # Normally this would default to text/plain but we won't assume
+    if len(parts) and len(parts[0]) > 0:
+        # First part is the mime type
+        mime_type = parts.pop(0)
 
-def file_uri_to_path(uri: str) -> Path:
-    """Convert a file:// URI to a Path object.
-    
-    Args:
-        uri: File URI to convert
-        
-    Returns:
-        Path object
-    """
-    if not uri.startswith('file://'):
-        raise ValueError("Not a file URI")
-    
-    parsed = urlparse(uri)
-    
-    # Handle Windows paths
-    if platform.system() == 'Windows':
-        # Windows file URIs can be file:///C:/path or file://server/share
-        path = unquote(parsed.path)
-        if path.startswith('/') and len(path) > 2 and path[2] == ':':
-            # Remove leading slash for absolute Windows paths
-            path = path[1:]
-    else:
-        # Unix paths
-        path = unquote(parsed.path)
-    
-    return Path(path)
+    attributes: Dict[str, str] = {}
+    for part in parts:
+        # Handle key=value pairs in the middle
+        if "=" in part:
+            key, value = part.split("=", 1)
+            attributes[key] = value
+        elif len(part) > 0:
+            attributes[part] = ""
+
+    content = base64.b64decode(data) if is_base64 else unquote_to_bytes(data)
+
+    return mime_type, attributes, content

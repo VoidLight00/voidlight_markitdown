@@ -18,7 +18,7 @@ import codecs
 
 from ._stream_info import StreamInfo
 from ._uri_utils import parse_data_uri, file_uri_to_path
-from ._korean_processor import KoreanTextProcessor
+from ._korean_utils import KoreanTextProcessor
 
 from .converters import (
     PlainTextConverter,
@@ -83,7 +83,7 @@ def _load_plugins() -> Union[None, List[Any]]:
     return _plugins
 
 
-@dataclass(kw_only=True, frozen=True)
+@dataclass(frozen=True)
 class ConverterRegistration:
     """A registration of a converter with its priority and other metadata."""
 
@@ -112,10 +112,7 @@ class VoidLightMarkItDown:
         self._normalize_korean = normalize_korean
         
         # Initialize Korean processor if in Korean mode
-        if self._korean_mode:
-            self._korean_processor = KoreanTextProcessor(normalize=self._normalize_korean)
-        else:
-            self._korean_processor = None
+        self._korean_processor = KoreanTextProcessor() if korean_mode else None
 
         requests_session = kwargs.get("requests_session")
         if requests_session is None:
@@ -127,9 +124,9 @@ class VoidLightMarkItDown:
 
         # TODO - remove these (see enable_builtins)
         self._llm_client: Any = None
-        self._llm_model: Union[str | None] = None
-        self._exiftool_path: Union[str | None] = None
-        self._style_map: Union[str | None] = None
+        self._llm_model: Optional[str] = None
+        self._exiftool_path: Optional[str] = None
+        self._style_map: Optional[str] = None
 
         # Register the converters
         self._converters: List[ConverterRegistration] = []
@@ -186,7 +183,7 @@ class VoidLightMarkItDown:
                 PlainTextConverter(), priority=PRIORITY_GENERIC_FILE_FORMAT
             )
             self.register_converter(
-                ZipConverter(voidlight_markitdown=self), priority=PRIORITY_GENERIC_FILE_FORMAT
+                ZipConverter(markitdown=self), priority=PRIORITY_GENERIC_FILE_FORMAT
             )
             self.register_converter(
                 HtmlConverter(), priority=PRIORITY_GENERIC_FILE_FORMAT
@@ -542,7 +539,7 @@ class VoidLightMarkItDown:
     def _convert(
         self, *, file_stream: BinaryIO, stream_info_guesses: List[StreamInfo], **kwargs
     ) -> DocumentConverterResult:
-        res: Union[None, DocumentConverterResult] = None
+        res: Optional[DocumentConverterResult] = None
 
         # Keep track of which converters throw exceptions
         failed_attempts: List[FailedConversionAttempt] = []
@@ -578,13 +575,14 @@ class VoidLightMarkItDown:
                 if "exiftool_path" not in _kwargs and self._exiftool_path is not None:
                     _kwargs["exiftool_path"] = self._exiftool_path
 
+                # Add Korean processing options
+                if self._korean_mode:
+                    _kwargs["korean_mode"] = True
+                    _kwargs["normalize_korean"] = self._normalize_korean
+                    _kwargs["korean_processor"] = self._korean_processor
+
                 # Add the list of converters for nested processing
                 _kwargs["_parent_converters"] = self._converters
-
-                # Add Korean processing options if in Korean mode
-                if self._korean_mode:
-                    _kwargs["korean_mode"] = self._korean_mode
-                    _kwargs["korean_processor"] = self._korean_processor
 
                 # Add legaxy kwargs
                 if stream_info is not None:
@@ -622,13 +620,15 @@ class VoidLightMarkItDown:
                 if res is not None:
                     # Apply Korean processing if enabled
                     if self._korean_mode and self._korean_processor:
-                        res.text_content = self._korean_processor.process(res.text_content)
+                        res.markdown = self._korean_processor.preprocess_korean_document(
+                            res.markdown, normalize=self._normalize_korean
+                        )
                     
                     # Normalize the content
-                    res.text_content = "\n".join(
-                        [line.rstrip() for line in re.split(r"\r?\n", res.text_content)]
+                    res.markdown = "\n".join(
+                        [line.rstrip() for line in re.split(r"\r?\n", res.markdown)]
                     )
-                    res.text_content = re.sub(r"\n{3,}", "\n\n", res.text_content)
+                    res.markdown = re.sub(r"\n{3,}", "\n\n", res.markdown)
                     return res
 
         # If we got this far without success, report any exceptions
@@ -716,10 +716,22 @@ class VoidLightMarkItDown:
                     # Read the first 4k to guess the charset
                     file_stream.seek(cur_pos)
                     stream_page = file_stream.read(4096)
-                    charset_result = charset_normalizer.from_bytes(stream_page).best()
-
-                    if charset_result is not None:
-                        charset = self._normalize_charset(charset_result.encoding)
+                    
+                    # For Korean mode, use Korean-aware charset detection
+                    if self._korean_mode and self._korean_processor:
+                        # Try Korean encodings first
+                        for encoding in KoreanTextProcessor.ENCODING_PRIORITY:
+                            try:
+                                stream_page.decode(encoding)
+                                charset = encoding
+                                break
+                            except:
+                                continue
+                    
+                    if charset is None:
+                        charset_result = charset_normalizer.from_bytes(stream_page).best()
+                        if charset_result is not None:
+                            charset = self._normalize_charset(charset_result.encoding)
 
                 # Normalize the first extension listed
                 guessed_extension = None
@@ -781,7 +793,7 @@ class VoidLightMarkItDown:
 
         return guesses
 
-    def _normalize_charset(self, charset: str | None) -> str | None:
+    def _normalize_charset(self, charset: Optional[str]) -> Optional[str]:
         """
         Normalize a charset string to a canonical form.
         """

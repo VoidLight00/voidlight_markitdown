@@ -1,9 +1,24 @@
-from typing import BinaryIO, Any, Union
+from typing import BinaryIO, Any, Union, Optional
 import base64
 import mimetypes
 from ._exiftool import exiftool_metadata
 from .._base_converter import DocumentConverter, DocumentConverterResult
 from .._stream_info import StreamInfo
+
+# Optional OCR imports
+try:
+    import easyocr
+    EASYOCR_AVAILABLE = True
+except ImportError:
+    EASYOCR_AVAILABLE = False
+
+try:
+    import pytesseract
+    from PIL import Image
+    import io
+    PYTESSERACT_AVAILABLE = True
+except ImportError:
+    PYTESSERACT_AVAILABLE = False
 
 ACCEPTED_MIME_TYPE_PREFIXES = [
     "image/jpeg",
@@ -16,7 +31,11 @@ ACCEPTED_FILE_EXTENSIONS = [".jpg", ".jpeg", ".png"]
 class ImageConverter(DocumentConverter):
     """
     Converts images to markdown via extraction of metadata (if `exiftool` is installed), and description via a multimodal LLM (if an llm_client is configured).
+    Enhanced with Korean OCR support using EasyOCR.
     """
+    
+    def __init__(self):
+        self.easyocr_reader = None
 
     def accepts(
         self,
@@ -43,6 +62,7 @@ class ImageConverter(DocumentConverter):
         **kwargs: Any,  # Options to pass to the converter
     ) -> DocumentConverterResult:
         md_content = ""
+        korean_mode = kwargs.get('korean_mode', False)
 
         # Add metadata
         metadata = exiftool_metadata(
@@ -65,6 +85,13 @@ class ImageConverter(DocumentConverter):
                 if f in metadata:
                     md_content += f"{f}: {metadata[f]}\n"
 
+        # Try OCR if requested or in Korean mode
+        perform_ocr = kwargs.get('perform_ocr', korean_mode)
+        if perform_ocr:
+            ocr_text = self._perform_ocr(file_stream, korean_mode=korean_mode)
+            if ocr_text:
+                md_content += "\n# OCR Text:\n" + ocr_text.strip() + "\n"
+        
         # Try describing the image with GPT
         llm_client = kwargs.get("llm_client")
         llm_model = kwargs.get("llm_model")
@@ -92,9 +119,14 @@ class ImageConverter(DocumentConverter):
         client,
         model,
         prompt=None,
-    ) -> Union[None, str]:
+    ) -> Optional[str]:
         if prompt is None or prompt.strip() == "":
-            prompt = "Write a detailed caption for this image."
+            # Check for Korean mode
+            korean_mode = kwargs.get('korean_mode', False)
+            if korean_mode:
+                prompt = "이 이미지에 대한 자세한 설명을 한국어로 작성해주세요. 이미지에 텍스트가 있다면 그 내용도 포함해주세요."
+            else:
+                prompt = "Write a detailed caption for this image."
 
         # Get the content type
         content_type = stream_info.mimetype
@@ -136,3 +168,41 @@ class ImageConverter(DocumentConverter):
         # Call the OpenAI API
         response = client.chat.completions.create(model=model, messages=messages)
         return response.choices[0].message.content
+    
+    def _perform_ocr(self, file_stream: BinaryIO, korean_mode: bool = False) -> str:
+        """Perform OCR on the image."""
+        cur_pos = file_stream.tell()
+        try:
+            # Try EasyOCR first for Korean
+            if korean_mode and EASYOCR_AVAILABLE:
+                if self.easyocr_reader is None:
+                    # Initialize reader with Korean and English
+                    self.easyocr_reader = easyocr.Reader(['ko', 'en'], gpu=False)
+                
+                # Read image data
+                file_stream.seek(0)
+                image_data = file_stream.read()
+                
+                # Perform OCR
+                result = self.easyocr_reader.readtext(image_data, detail=0)
+                return '\n'.join(result) if result else ""
+            
+            # Fallback to pytesseract
+            elif PYTESSERACT_AVAILABLE:
+                file_stream.seek(0)
+                image = Image.open(file_stream)
+                
+                # Set language for pytesseract
+                lang = 'kor+eng' if korean_mode else 'eng'
+                try:
+                    return pytesseract.image_to_string(image, lang=lang)
+                except:
+                    # Fallback to English only if Korean fails
+                    return pytesseract.image_to_string(image, lang='eng')
+            
+            return ""
+            
+        except Exception as e:
+            return ""
+        finally:
+            file_stream.seek(cur_pos)

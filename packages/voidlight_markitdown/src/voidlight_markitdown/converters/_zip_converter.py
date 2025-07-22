@@ -10,7 +10,7 @@ from .._exceptions import UnsupportedFormatException, FileConversionException
 
 # Break otherwise circular import for type hinting
 if TYPE_CHECKING:
-    from .._voidlight_markitdown import MarkItDown
+    from .._voidlight_markitdown import VoidLightMarkItDown
 
 ACCEPTED_MIME_TYPE_PREFIXES = [
     "application/zip",
@@ -61,7 +61,7 @@ class ZipConverter(DocumentConverter):
     def __init__(
         self,
         *,
-        markitdown: "MarkItDown",
+        markitdown: "VoidLightMarkItDown",
     ):
         super().__init__()
         self._markitdown = markitdown

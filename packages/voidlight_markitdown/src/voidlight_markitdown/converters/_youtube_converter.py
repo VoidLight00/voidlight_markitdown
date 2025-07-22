@@ -2,7 +2,7 @@ import json
 import time
 import re
 import bs4
-from typing import Any, BinaryIO, Dict, List, Union
+from typing import Any, BinaryIO, Dict, List, Union, Optional
 from urllib.parse import parse_qs, urlparse, unquote
 
 from .._base_converter import DocumentConverter, DocumentConverterResult
@@ -200,15 +200,15 @@ class YouTubeConverter(DocumentConverter):
         self,
         metadata: Dict[str, str],
         keys: List[str],
-        default: Union[str, None] = None,
-    ) -> Union[str, None]:
+        default: Optional[str] = None,
+    ) -> Optional[str]:
         """Get first non-empty value from metadata matching given keys."""
         for k in keys:
             if k in metadata:
                 return metadata[k]
         return default
 
-    def _findKey(self, json: Any, key: str) -> Union[str, None]:  # TODO: Fix json type
+    def _findKey(self, json: Any, key: str) -> Optional[str]:  # TODO: Fix json type
         """Recursively search for a key in nested dictionary/list structures."""
         if isinstance(json, list):
             for elm in json:

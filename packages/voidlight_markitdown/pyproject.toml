@@ -7,7 +7,7 @@ name = "voidlight-markitdown"
 dynamic = ["version"]
 description = 'An extremely simple text-based document reader with enhanced Korean language support, suitable for LLM use.'
 readme = "README.md"
-requires-python = ">=3.10"
+requires-python = ">=3.9"
 license = "MIT"
 keywords = ["markdown", "converter", "korean", "한국어", "text extraction", "llm"]
 authors = [
@@ -83,8 +83,11 @@ zip = [
 ]
 korean = [
   "konlpy>=0.6.0",
-  "soynlp>=0.0.493",
   "kiwipiepy>=0.17.1",
+  "soynlp>=0.0.493",
+  "py-hanspell>=1.1",
+  "jamo>=0.4.1",
+  "hanja>=0.13.3",
 ]
 dev = [
   "ipykernel",

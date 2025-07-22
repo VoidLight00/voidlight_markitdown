@@ -1,35 +1,32 @@
-from typing import Optional, Union, BinaryIO
-from pathlib import Path
-import os
+from dataclasses import dataclass, asdict
+from typing import Optional
 
 
+@dataclass(frozen=True)
 class StreamInfo:
-    """Information about a stream/file."""
-    
-    def __init__(
-        self,
-        stream: BinaryIO,
-        filename: Optional[str] = None,
-        mime_type: Optional[str] = None,
-        encoding: Optional[str] = None
-    ):
-        self.stream = stream
-        self.filename = filename
-        self.mime_type = mime_type
-        self.encoding = encoding
-        
-    @property
-    def extension(self) -> Optional[str]:
-        """Get file extension if filename is available."""
-        if self.filename:
-            _, ext = os.path.splitext(self.filename)
-            return ext.lower()
-        return None
-    
-    def read(self) -> bytes:
-        """Read the entire stream content."""
-        pos = self.stream.tell()
-        self.stream.seek(0)
-        content = self.stream.read()
-        self.stream.seek(pos)
-        return content
+    """The StreamInfo class is used to store information about a file stream.
+    All fields can be None, and will depend on how the stream was opened.
+    """
+
+    mimetype: Optional[str] = None
+    extension: Optional[str] = None
+    charset: Optional[str] = None
+    filename: Optional[
+        str
+    ] = None  # From local path, url, or Content-Disposition header
+    local_path: Optional[str] = None  # If read from disk
+    url: Optional[str] = None  # If read from url
+
+    def copy_and_update(self, *args, **kwargs):
+        """Copy the StreamInfo object and update it with the given StreamInfo
+        instance and/or other keyword arguments."""
+        new_info = asdict(self)
+
+        for si in args:
+            assert isinstance(si, StreamInfo)
+            new_info.update({k: v for k, v in asdict(si).items() if v is not None})
+
+        if len(kwargs) > 0:
+            new_info.update(kwargs)
+
+        return StreamInfo(**new_info)

@@ -1,7 +1,7 @@
 import sys
 import re
 import os
-from typing import BinaryIO, Any, List
+from typing import BinaryIO, Any, List, Union, Optional
 from enum import Enum
 
 from .._base_converter import DocumentConverter, DocumentConverterResult
@@ -130,7 +130,7 @@ class DocumentIntelligenceConverter(DocumentConverter):
         *,
         endpoint: str,
         api_version: str = "2024-07-31-preview",
-        credential: AzureKeyCredential | TokenCredential | None = None,
+        credential: Optional[Union[AzureKeyCredential, TokenCredential]] = None,
         file_types: List[DocumentIntelligenceFileType] = [
             DocumentIntelligenceFileType.DOCX,
             DocumentIntelligenceFileType.PPTX,
@@ -148,7 +148,7 @@ class DocumentIntelligenceConverter(DocumentConverter):
         Args:
             endpoint (str): The endpoint for the Document Intelligence service.
             api_version (str): The API version to use. Defaults to "2024-07-31-preview".
-            credential (AzureKeyCredential | TokenCredential | None): The credential to use for authentication.
+            credential (Optional[Union[AzureKeyCredential, TokenCredential]]): The credential to use for authentication.
             file_types (List[DocumentIntelligenceFileType]): The file types to accept. Defaults to all supported file types.
         """
 

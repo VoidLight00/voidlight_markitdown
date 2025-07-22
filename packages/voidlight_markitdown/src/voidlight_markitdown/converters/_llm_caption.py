@@ -1,4 +1,4 @@
-from typing import BinaryIO, Union
+from typing import BinaryIO, Union, Optional
 import base64
 import mimetypes
 from .._stream_info import StreamInfo
@@ -6,7 +6,7 @@ from .._stream_info import StreamInfo
 
 def llm_caption(
     file_stream: BinaryIO, stream_info: StreamInfo, *, client, model, prompt=None
-) -> Union[None, str]:
+) -> Optional[str]:
     if prompt is None or prompt.strip() == "":
         prompt = "Write a detailed caption for this image."
 

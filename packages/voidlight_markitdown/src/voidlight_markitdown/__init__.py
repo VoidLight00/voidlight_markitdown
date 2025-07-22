@@ -2,6 +2,8 @@ from ._voidlight_markitdown import VoidLightMarkItDown, DocumentConverterResult
 from ._exceptions import (
     FileConversionException,
     UnsupportedFormatException,
+    MissingDependencyException,
+    MISSING_DEPENDENCY_MESSAGE,
 )
 
 __all__ = [
@@ -9,4 +11,6 @@ __all__ = [
     "DocumentConverterResult",
     "FileConversionException",
     "UnsupportedFormatException",
+    "MissingDependencyException",
+    "MISSING_DEPENDENCY_MESSAGE",
 ]
