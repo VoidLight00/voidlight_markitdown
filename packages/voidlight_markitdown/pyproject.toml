@@ -85,7 +85,7 @@ korean = [
   "konlpy>=0.6.0",
   "kiwipiepy>=0.17.1",
   "soynlp>=0.0.493",
-  "py-hanspell>=1.1",
+  # "py-hanspell>=1.1",  # Temporarily disabled due to installation issues
   "jamo>=0.4.1",
   "hanja>=0.13.3",
 ]

@@ -71,9 +71,12 @@ class HtmlConverter(DocumentConverter):
         # If Korean mode is enabled, we could add Korean-specific HTML processing here
         # For now, HTML converter relies on BeautifulSoup which handles Korean well
         
+        # Extract title for metadata
+        title = None if soup.title is None else soup.title.string
+        
         return DocumentConverterResult(
             markdown=webpage_text,
-            title=None if soup.title is None else soup.title.string,
+            metadata={"title": title} if title else None,
         )
 
     def convert_string(
