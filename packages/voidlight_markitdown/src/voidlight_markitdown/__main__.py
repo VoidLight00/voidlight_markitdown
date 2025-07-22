@@ -6,6 +6,7 @@ from pathlib import Path
 from typing import Optional
 from ._voidlight_markitdown import VoidLightMarkItDown
 from ._exceptions import FileConversionException
+from .__about__ import __version__
 
 
 def main():
@@ -48,6 +49,12 @@ def main():
         help="Disable text extraction from binary formats."
     )
     
+    parser.add_argument(
+        "--version",
+        action="version",
+        version=f"voidlight-markitdown {__version__}"
+    )
+    
     args = parser.parse_args()
     
     # Initialize VoidLightMarkItDown
@@ -61,8 +68,13 @@ def main():
     try:
         # Handle input
         if args.input:
-            # Convert from file or URI
-            result = converter.convert_uri(args.input)
+            # Check if it's a URI or a file path
+            if any(args.input.startswith(scheme) for scheme in ["http:", "https:", "file:", "data:"]):
+                # It's a URI
+                result = converter.convert_uri(args.input)
+            else:
+                # It's a file path
+                result = converter.convert(args.input)
         else:
             # Read from stdin
             import io

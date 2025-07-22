@@ -76,7 +76,7 @@ class HtmlConverter(DocumentConverter):
         
         return DocumentConverterResult(
             markdown=webpage_text,
-            metadata={"title": title} if title else None,
+            title=title,
         )
 
     def convert_string(
