@@ -3,6 +3,10 @@ from dataclasses import dataclass
 from typing import Any, Dict, Union, Optional
 from pathlib import Path
 
+# Priority levels for converters
+PRIORITY_SPECIFIC_FILE_FORMAT = 0
+PRIORITY_GENERIC_FILE_FORMAT = 10
+
 
 @dataclass
 class DocumentConverterResult:

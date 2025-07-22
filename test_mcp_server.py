@@ -50,7 +50,7 @@ def test_stdio_mode():
         # Create a test request for Korean document conversion
         request = {
             "jsonrpc": "2.0",
-            "method": "call_tool",
+            "method": "tools/call",
             "params": {
                 "name": "convert_korean_document",
                 "arguments": {
@@ -181,9 +181,12 @@ def test_http_sse_mode():
         
         try:
             response = requests.post(
-                f"{mcp_url}/initialize",
+                mcp_url,  # Use base /mcp endpoint
                 json=init_data,
-                headers={'Content-Type': 'application/json'}
+                headers={
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json, text/event-stream'
+                }
             )
             if response.status_code == 200:
                 print_result(True, "MCP initialization successful")
@@ -197,7 +200,7 @@ def test_http_sse_mode():
         print("\nTesting Korean document conversion via HTTP...")
         tool_data = {
             "jsonrpc": "2.0",
-            "method": "call_tool",
+            "method": "tools/call",
             "params": {
                 "name": "convert_korean_document",
                 "arguments": {
@@ -210,9 +213,12 @@ def test_http_sse_mode():
         
         try:
             response = requests.post(
-                f"{mcp_url}/call_tool",
+                mcp_url,  # Use base /mcp endpoint
                 json=tool_data,
-                headers={'Content-Type': 'application/json'}
+                headers={
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json, text/event-stream'
+                }
             )
             if response.status_code == 200:
                 print_result(True, "Korean document conversion request successful")

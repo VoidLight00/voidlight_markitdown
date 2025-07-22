@@ -1,0 +1,282 @@
+[
+  {
+    "converter_name": "PlainTextConverter",
+    "test_file": "test.json",
+    "status": "success",
+    "error": null,
+    "markdown_preview": "{\n    \"key1\": \"string_value\",\n    \"key2\": 1234,\n    \"key3\": [\n        \"list_value1\",\n        \"list_value2\"\n    ],\n    \"5b64c88c-b3c3-4510-bcb8-da0b200602d8\": \"uuid_key\",\n    \"uuid_value\": \"9700dc99-6685-40b4-9a3a-5e406dcb37f3\"\n}\n",
+    "korean_content_found": false
+  },
+  {
+    "converter_name": "HtmlConverter",
+    "test_file": "test_blog.html",
+    "status": "success",
+    "error": null,
+    "markdown_preview": "[Skip to main content](#__docusaurus_skipToContent_fallback)\n\nWhat's new in AutoGen? Read [this blog](/autogen/blog/2024/03/03/AutoGen-Update) for an overview of updates\n\n[![AutoGen](/autogen/img/ag.svg)![AutoGen](/autogen/img/ag.svg)\n\n**AutoGen**](/autogen/)[Docs](/autogen/docs/Getting-Started)[API](/autogen/docs/reference/agentchat/conversable_agent)[Blog](/autogen/blog)[FAQ](/autogen/docs/FAQ)[Examples](/autogen/docs/Examples)[Notebooks](/autogen/docs/notebooks)[Gallery](/autogen/docs/Gallery...",
+    "korean_content_found": false
+  },
+  {
+    "converter_name": "HtmlConverter",
+    "test_file": "test_blog.html",
+    "status": "success",
+    "error": null,
+    "markdown_preview": "[Skip to main content](#__docusaurus_skipToContent_fallback) What's new in AutoGen? Read [this blog](/autogen/blog/2024/03/03/AutoGen-Update) for an overview of updates [![AutoGen](/autogen/img/ag.svg)![AutoGen](/autogen/img/ag.svg) **AutoGen**](/autogen/)[Docs](/autogen/docs/Getting-Started)[API](/autogen/docs/reference/agentchat/conversable_agent)[Blog](/autogen/blog)[FAQ](/autogen/docs/FAQ)[Examples](/autogen/docs/Examples)[Notebooks](/autogen/docs/notebooks)[Gallery](/autogen/docs/Gallery) O...",
+    "korean_content_found": false
+  },
+  {
+    "converter_name": "HtmlConverter",
+    "test_file": "test_wikipedia.html",
+    "status": "success",
+    "error": null,
+    "markdown_preview": "[Jump to content](#bodyContent)\n\nMain menu\n\nMain menu\n\nmove to sidebar\nhide\n\nNavigation\n\n* [Main page](/wiki/Main_Page \"Visit the main page [z]\")\n* [Contents](/wiki/Wikipedia%3AContents \"Guides to browsing Wikipedia\")\n* [Current events](/wiki/Portal%3ACurrent_events \"Articles related to current events\")\n* [Random article](/wiki/Special%3ARandom \"Visit a randomly selected article [x]\")\n* [About Wikipedia](/wiki/Wikipedia%3AAbout \"Learn about Wikipedia and how it works\")\n* [Contact us](//en.wikipe...",
+    "korean_content_found": false
+  },
+  {
+    "converter_name": "HtmlConverter",
+    "test_file": "test_wikipedia.html",
+    "status": "success",
+    "error": null,
+    "markdown_preview": "[Jump to content](#bodyContent) Main menu Main menu move to sidebar hide Navigation * [Main page](/wiki/Main_Page \"Visit the main page [z]\") * [Contents](/wiki/Wikipedia%3AContents \"Guides to browsing Wikipedia\") * [Current events](/wiki/Portal%3ACurrent_events \"Articles related to current events\") * [Random article](/wiki/Special%3ARandom \"Visit a randomly selected article [x]\") * [About Wikipedia](/wiki/Wikipedia%3AAbout \"Learn about Wikipedia and how it works\") * [Contact us](//en.wikipedia.o...",
+    "korean_content_found": false
+  },
+  {
+    "converter_name": "HtmlConverter",
+    "test_file": "test_serp.html",
+    "status": "success",
+    "error": null,
+    "markdown_preview": "Skip to content[#](https://www.bing.com/ck/a?!&&p=f8f2368f437d7f27JmltdHM9MTcxMDQ2MDgwMCZpZ3VpZD0xNWViYmNjMy05YmU3LTY3NTYtMzRhNC1hODgwOWE1ZDY2MTcmaW5zaWQ9NTA0NA&ptn=3&ver=2&hsh=3&fclid=15ebbcc3-9be7-6756-34a4-a8809a5d6617&u=a1Lz9GT1JNPVo5RkQx&ntb=1)\n\nMicrosoft wikipedia\n\nTab\n\nMicrosoft wikipedia\n\n![Profile Picture](data:image/png;base64...)RewardsMobile\n\n* [Search](https://www.bing.com/ck/a?!&&p=800deebc60d3525aJmltdHM9MTcxMDQ2MDgwMCZpZ3VpZD0xNWViYmNjMy05YmU3LTY3NTYtMzRhNC1hODgwOWE1ZDY2MTcmaW5za...",
+    "korean_content_found": false
+  },
+  {
+    "converter_name": "HtmlConverter",
+    "test_file": "test_serp.html",
+    "status": "success",
+    "error": null,
+    "markdown_preview": "Skip to content[#](https://www.bing.com/ck/a?!&&p=f8f2368f437d7f27JmltdHM9MTcxMDQ2MDgwMCZpZ3VpZD0xNWViYmNjMy05YmU3LTY3NTYtMzRhNC1hODgwOWE1ZDY2MTcmaW5zaWQ9NTA0NA&ptn=3&ver=2&hsh=3&fclid=15ebbcc3-9be7-6756-34a4-a8809a5d6617&u=a1Lz9GT1JNPVo5RkQx&ntb=1) Microsoft wikipedia Tab Microsoft wikipedia ![Profile Picture](data:image/png;base64...)RewardsMobile * [Search](https://www.bing.com/ck/a?!&&p=800deebc60d3525aJmltdHM9MTcxMDQ2MDgwMCZpZ3VpZD0xNWViYmNjMy05YmU3LTY3NTYtMzRhNC1hODgwOWE1ZDY2MTcmaW5zaWQ9NT...",
+    "korean_content_found": false
+  },
+  {
+    "converter_name": "RssConverter",
+    "test_file": "test_rss.xml",
+    "status": "success",
+    "error": null,
+    "markdown_preview": "<rss xmlns:dc=\"http://purl.org/dc/elements/1.1/\" xmlns:ns0=\"http://www.w3.org/2005/Atom\" xmlns:ns1=\"http://purl.org/rss/1.0/modules/syndication/\" xmlns:ns3=\"http://purl.org/rss/1.0/modules/content/\" version=\"2.0\"><channel>\t<title>The Official Microsoft Blog</title>\t<ns0:link href=\"https://blogs.microsoft.com/feed/\" rel=\"self\" type=\"application/rss+xml\" />\t<link>https://blogs.microsoft.com/</link>\t<description />\t<lastBuildDate>Mon, 09 Dec 2024 20:26:59 +0000</lastBuildDate>\t<language>en-US</lang...",
+    "korean_content_found": false
+  },
+  {
+    "converter_name": "WikipediaConverter",
+    "test_file": "test_wikipedia.html",
+    "status": "success",
+    "error": null,
+    "markdown_preview": "[Jump to content](#bodyContent)\n\nMain menu\n\nMain menu\n\nmove to sidebar\nhide\n\nNavigation\n\n* [Main page](/wiki/Main_Page \"Visit the main page [z]\")\n* [Contents](/wiki/Wikipedia%3AContents \"Guides to browsing Wikipedia\")\n* [Current events](/wiki/Portal%3ACurrent_events \"Articles related to current events\")\n* [Random article](/wiki/Special%3ARandom \"Visit a randomly selected article [x]\")\n* [About Wikipedia](/wiki/Wikipedia%3AAbout \"Learn about Wikipedia and how it works\")\n* [Contact us](//en.wikipe...",
+    "korean_content_found": false
+  },
+  {
+    "converter_name": "WikipediaConverter",
+    "test_file": "test_wikipedia.html",
+    "status": "success",
+    "error": null,
+    "markdown_preview": "[Jump to content](#bodyContent) Main menu Main menu move to sidebar hide Navigation * [Main page](/wiki/Main_Page \"Visit the main page [z]\") * [Contents](/wiki/Wikipedia%3AContents \"Guides to browsing Wikipedia\") * [Current events](/wiki/Portal%3ACurrent_events \"Articles related to current events\") * [Random article](/wiki/Special%3ARandom \"Visit a randomly selected article [x]\") * [About Wikipedia](/wiki/Wikipedia%3AAbout \"Learn about Wikipedia and how it works\") * [Contact us](//en.wikipedia.o...",
+    "korean_content_found": false
+  },
+  {
+    "converter_name": "YouTubeConverter",
+    "test_file": "N/A",
+    "status": "skipped",
+    "error": "No test files available for this converter",
+    "markdown_preview": null,
+    "korean_content_found": false
+  },
+  {
+    "converter_name": "BingSerpConverter",
+    "test_file": "test_serp.html",
+    "status": "success",
+    "error": null,
+    "markdown_preview": "Skip to content[#](https://www.bing.com/ck/a?!&&p=f8f2368f437d7f27JmltdHM9MTcxMDQ2MDgwMCZpZ3VpZD0xNWViYmNjMy05YmU3LTY3NTYtMzRhNC1hODgwOWE1ZDY2MTcmaW5zaWQ9NTA0NA&ptn=3&ver=2&hsh=3&fclid=15ebbcc3-9be7-6756-34a4-a8809a5d6617&u=a1Lz9GT1JNPVo5RkQx&ntb=1)\n\nMicrosoft wikipedia\n\nTab\n\nMicrosoft wikipedia\n\n![Profile Picture](data:image/png;base64...)RewardsMobile\n\n* [Search](https://www.bing.com/ck/a?!&&p=800deebc60d3525aJmltdHM9MTcxMDQ2MDgwMCZpZ3VpZD0xNWViYmNjMy05YmU3LTY3NTYtMzRhNC1hODgwOWE1ZDY2MTcmaW5za...",
+    "korean_content_found": false
+  },
+  {
+    "converter_name": "BingSerpConverter",
+    "test_file": "test_serp.html",
+    "status": "success",
+    "error": null,
+    "markdown_preview": "Skip to content[#](https://www.bing.com/ck/a?!&&p=f8f2368f437d7f27JmltdHM9MTcxMDQ2MDgwMCZpZ3VpZD0xNWViYmNjMy05YmU3LTY3NTYtMzRhNC1hODgwOWE1ZDY2MTcmaW5zaWQ9NTA0NA&ptn=3&ver=2&hsh=3&fclid=15ebbcc3-9be7-6756-34a4-a8809a5d6617&u=a1Lz9GT1JNPVo5RkQx&ntb=1) Microsoft wikipedia Tab Microsoft wikipedia ![Profile Picture](data:image/png;base64...)RewardsMobile * [Search](https://www.bing.com/ck/a?!&&p=800deebc60d3525aJmltdHM9MTcxMDQ2MDgwMCZpZ3VpZD0xNWViYmNjMy05YmU3LTY3NTYtMzRhNC1hODgwOWE1ZDY2MTcmaW5zaWQ9NT...",
+    "korean_content_found": false
+  },
+  {
+    "converter_name": "DocxConverter",
+    "test_file": "test.docx",
+    "status": "failed",
+    "error": "FileConversionException: File conversion failed after 1 attempts:\n - DocxConverter threw MissingDependencyException with message: DocxConverter recognized the input as a potential .docx file, but the dependencies needed to read .docx files have not been installed. To resolve this error, include the optional dependency [docx] or [all] when installing VoidLight MarkItDown. For example:\n\n* pip install voidlight-markitdown[docx]\n* pip install voidlight-markitdown[all]\n* pip install voidlight-markitdown[docx, ...]\n* etc.\n\nTraceback (most recent call last):\n  File \"/Users/voidlight/voidlight_markitdown/packages/voidlight_markitdown/test_all_converters.py\", line 90, in test_converter\n    result = md.convert(str(file_path))\n  File \"/Users/voidlight/voidlight_markitdown/packages/voidlight_markitdown/src/voidlight_markitdown/_voidlight_markitdown.py\", line 284, in convert\n    return self.convert_local(source, stream_info=stream_info, **kwargs)\n  File \"/Users/voidlight/voidlight_markitdown/packages/voidlight_markitdown/src/voidlight_markitdown/_voidlight_markitdown.py\", line 338, in convert_local\n    return self._convert(file_stream=fh, stream_info_guesses=guesses, **kwargs)\n  File \"/Users/voidlight/voidlight_markitdown/packages/voidlight_markitdown/src/voidlight_markitdown/_voidlight_markitdown.py\", line 636, in _convert\n    raise FileConversionException(attempts=failed_attempts)\nvoidlight_markitdown._exceptions.FileConversionException: File conversion failed after 1 attempts:\n - DocxConverter threw MissingDependencyException with message: DocxConverter recognized the input as a potential .docx file, but the dependencies needed to read .docx files have not been installed. To resolve this error, include the optional dependency [docx] or [all] when installing VoidLight MarkItDown. For example:\n\n* pip install voidlight-markitdown[docx]\n* pip install voidlight-markitdown[all]\n* pip install voidlight-markitdown[docx, ...]\n* etc.\n\n",
+    "markdown_preview": null,
+    "korean_content_found": false
+  },
+  {
+    "converter_name": "DocxConverter",
+    "test_file": "test.docx",
+    "status": "failed",
+    "error": "FileConversionException: File conversion failed after 1 attempts:\n - DocxConverter threw MissingDependencyException with message: DocxConverter recognized the input as a potential .docx file, but the dependencies needed to read .docx files have not been installed. To resolve this error, include the optional dependency [docx] or [all] when installing VoidLight MarkItDown. For example:\n\n* pip install voidlight-markitdown[docx]\n* pip install voidlight-markitdown[all]\n* pip install voidlight-markitdown[docx, ...]\n* etc.\n\nTraceback (most recent call last):\n  File \"/Users/voidlight/voidlight_markitdown/packages/voidlight_markitdown/test_all_converters.py\", line 90, in test_converter\n    result = md.convert(str(file_path))\n  File \"/Users/voidlight/voidlight_markitdown/packages/voidlight_markitdown/src/voidlight_markitdown/_voidlight_markitdown.py\", line 284, in convert\n    return self.convert_local(source, stream_info=stream_info, **kwargs)\n  File \"/Users/voidlight/voidlight_markitdown/packages/voidlight_markitdown/src/voidlight_markitdown/_voidlight_markitdown.py\", line 338, in convert_local\n    return self._convert(file_stream=fh, stream_info_guesses=guesses, **kwargs)\n  File \"/Users/voidlight/voidlight_markitdown/packages/voidlight_markitdown/src/voidlight_markitdown/_voidlight_markitdown.py\", line 636, in _convert\n    raise FileConversionException(attempts=failed_attempts)\nvoidlight_markitdown._exceptions.FileConversionException: File conversion failed after 1 attempts:\n - DocxConverter threw MissingDependencyException with message: DocxConverter recognized the input as a potential .docx file, but the dependencies needed to read .docx files have not been installed. To resolve this error, include the optional dependency [docx] or [all] when installing VoidLight MarkItDown. For example:\n\n* pip install voidlight-markitdown[docx]\n* pip install voidlight-markitdown[all]\n* pip install voidlight-markitdown[docx, ...]\n* etc.\n\n",
+    "markdown_preview": null,
+    "korean_content_found": false
+  },
+  {
+    "converter_name": "DocxConverter",
+    "test_file": "equations.docx",
+    "status": "failed",
+    "error": "FileConversionException: File conversion failed after 1 attempts:\n - DocxConverter threw MissingDependencyException with message: DocxConverter recognized the input as a potential .docx file, but the dependencies needed to read .docx files have not been installed. To resolve this error, include the optional dependency [docx] or [all] when installing VoidLight MarkItDown. For example:\n\n* pip install voidlight-markitdown[docx]\n* pip install voidlight-markitdown[all]\n* pip install voidlight-markitdown[docx, ...]\n* etc.\n\nTraceback (most recent call last):\n  File \"/Users/voidlight/voidlight_markitdown/packages/voidlight_markitdown/test_all_converters.py\", line 90, in test_converter\n    result = md.convert(str(file_path))\n  File \"/Users/voidlight/voidlight_markitdown/packages/voidlight_markitdown/src/voidlight_markitdown/_voidlight_markitdown.py\", line 284, in convert\n    return self.convert_local(source, stream_info=stream_info, **kwargs)\n  File \"/Users/voidlight/voidlight_markitdown/packages/voidlight_markitdown/src/voidlight_markitdown/_voidlight_markitdown.py\", line 338, in convert_local\n    return self._convert(file_stream=fh, stream_info_guesses=guesses, **kwargs)\n  File \"/Users/voidlight/voidlight_markitdown/packages/voidlight_markitdown/src/voidlight_markitdown/_voidlight_markitdown.py\", line 636, in _convert\n    raise FileConversionException(attempts=failed_attempts)\nvoidlight_markitdown._exceptions.FileConversionException: File conversion failed after 1 attempts:\n - DocxConverter threw MissingDependencyException with message: DocxConverter recognized the input as a potential .docx file, but the dependencies needed to read .docx files have not been installed. To resolve this error, include the optional dependency [docx] or [all] when installing VoidLight MarkItDown. For example:\n\n* pip install voidlight-markitdown[docx]\n* pip install voidlight-markitdown[all]\n* pip install voidlight-markitdown[docx, ...]\n* etc.\n\n",
+    "markdown_preview": null,
+    "korean_content_found": false
+  },
+  {
+    "converter_name": "DocxConverter",
+    "test_file": "equations.docx",
+    "status": "failed",
+    "error": "FileConversionException: File conversion failed after 1 attempts:\n - DocxConverter threw MissingDependencyException with message: DocxConverter recognized the input as a potential .docx file, but the dependencies needed to read .docx files have not been installed. To resolve this error, include the optional dependency [docx] or [all] when installing VoidLight MarkItDown. For example:\n\n* pip install voidlight-markitdown[docx]\n* pip install voidlight-markitdown[all]\n* pip install voidlight-markitdown[docx, ...]\n* etc.\n\nTraceback (most recent call last):\n  File \"/Users/voidlight/voidlight_markitdown/packages/voidlight_markitdown/test_all_converters.py\", line 90, in test_converter\n    result = md.convert(str(file_path))\n  File \"/Users/voidlight/voidlight_markitdown/packages/voidlight_markitdown/src/voidlight_markitdown/_voidlight_markitdown.py\", line 284, in convert\n    return self.convert_local(source, stream_info=stream_info, **kwargs)\n  File \"/Users/voidlight/voidlight_markitdown/packages/voidlight_markitdown/src/voidlight_markitdown/_voidlight_markitdown.py\", line 338, in convert_local\n    return self._convert(file_stream=fh, stream_info_guesses=guesses, **kwargs)\n  File \"/Users/voidlight/voidlight_markitdown/packages/voidlight_markitdown/src/voidlight_markitdown/_voidlight_markitdown.py\", line 636, in _convert\n    raise FileConversionException(attempts=failed_attempts)\nvoidlight_markitdown._exceptions.FileConversionException: File conversion failed after 1 attempts:\n - DocxConverter threw MissingDependencyException with message: DocxConverter recognized the input as a potential .docx file, but the dependencies needed to read .docx files have not been installed. To resolve this error, include the optional dependency [docx] or [all] when installing VoidLight MarkItDown. For example:\n\n* pip install voidlight-markitdown[docx]\n* pip install voidlight-markitdown[all]\n* pip install voidlight-markitdown[docx, ...]\n* etc.\n\n",
+    "markdown_preview": null,
+    "korean_content_found": false
+  },
+  {
+    "converter_name": "DocxConverter",
+    "test_file": "test_with_comment.docx",
+    "status": "failed",
+    "error": "FileConversionException: File conversion failed after 1 attempts:\n - DocxConverter threw MissingDependencyException with message: DocxConverter recognized the input as a potential .docx file, but the dependencies needed to read .docx files have not been installed. To resolve this error, include the optional dependency [docx] or [all] when installing VoidLight MarkItDown. For example:\n\n* pip install voidlight-markitdown[docx]\n* pip install voidlight-markitdown[all]\n* pip install voidlight-markitdown[docx, ...]\n* etc.\n\nTraceback (most recent call last):\n  File \"/Users/voidlight/voidlight_markitdown/packages/voidlight_markitdown/test_all_converters.py\", line 90, in test_converter\n    result = md.convert(str(file_path))\n  File \"/Users/voidlight/voidlight_markitdown/packages/voidlight_markitdown/src/voidlight_markitdown/_voidlight_markitdown.py\", line 284, in convert\n    return self.convert_local(source, stream_info=stream_info, **kwargs)\n  File \"/Users/voidlight/voidlight_markitdown/packages/voidlight_markitdown/src/voidlight_markitdown/_voidlight_markitdown.py\", line 338, in convert_local\n    return self._convert(file_stream=fh, stream_info_guesses=guesses, **kwargs)\n  File \"/Users/voidlight/voidlight_markitdown/packages/voidlight_markitdown/src/voidlight_markitdown/_voidlight_markitdown.py\", line 636, in _convert\n    raise FileConversionException(attempts=failed_attempts)\nvoidlight_markitdown._exceptions.FileConversionException: File conversion failed after 1 attempts:\n - DocxConverter threw MissingDependencyException with message: DocxConverter recognized the input as a potential .docx file, but the dependencies needed to read .docx files have not been installed. To resolve this error, include the optional dependency [docx] or [all] when installing VoidLight MarkItDown. For example:\n\n* pip install voidlight-markitdown[docx]\n* pip install voidlight-markitdown[all]\n* pip install voidlight-markitdown[docx, ...]\n* etc.\n\n",
+    "markdown_preview": null,
+    "korean_content_found": false
+  },
+  {
+    "converter_name": "DocxConverter",
+    "test_file": "test_with_comment.docx",
+    "status": "failed",
+    "error": "FileConversionException: File conversion failed after 1 attempts:\n - DocxConverter threw MissingDependencyException with message: DocxConverter recognized the input as a potential .docx file, but the dependencies needed to read .docx files have not been installed. To resolve this error, include the optional dependency [docx] or [all] when installing VoidLight MarkItDown. For example:\n\n* pip install voidlight-markitdown[docx]\n* pip install voidlight-markitdown[all]\n* pip install voidlight-markitdown[docx, ...]\n* etc.\n\nTraceback (most recent call last):\n  File \"/Users/voidlight/voidlight_markitdown/packages/voidlight_markitdown/test_all_converters.py\", line 90, in test_converter\n    result = md.convert(str(file_path))\n  File \"/Users/voidlight/voidlight_markitdown/packages/voidlight_markitdown/src/voidlight_markitdown/_voidlight_markitdown.py\", line 284, in convert\n    return self.convert_local(source, stream_info=stream_info, **kwargs)\n  File \"/Users/voidlight/voidlight_markitdown/packages/voidlight_markitdown/src/voidlight_markitdown/_voidlight_markitdown.py\", line 338, in convert_local\n    return self._convert(file_stream=fh, stream_info_guesses=guesses, **kwargs)\n  File \"/Users/voidlight/voidlight_markitdown/packages/voidlight_markitdown/src/voidlight_markitdown/_voidlight_markitdown.py\", line 636, in _convert\n    raise FileConversionException(attempts=failed_attempts)\nvoidlight_markitdown._exceptions.FileConversionException: File conversion failed after 1 attempts:\n - DocxConverter threw MissingDependencyException with message: DocxConverter recognized the input as a potential .docx file, but the dependencies needed to read .docx files have not been installed. To resolve this error, include the optional dependency [docx] or [all] when installing VoidLight MarkItDown. For example:\n\n* pip install voidlight-markitdown[docx]\n* pip install voidlight-markitdown[all]\n* pip install voidlight-markitdown[docx, ...]\n* etc.\n\n",
+    "markdown_preview": null,
+    "korean_content_found": false
+  },
+  {
+    "converter_name": "XlsxConverter",
+    "test_file": "test.xlsx",
+    "status": "failed",
+    "error": "FileConversionException: File conversion failed after 1 attempts:\n - XlsxConverter threw MissingDependencyException with message: XlsxConverter recognized the input as a potential .xlsx file, but the dependencies needed to read .xlsx files have not been installed. To resolve this error, include the optional dependency [xlsx] or [all] when installing VoidLight MarkItDown. For example:\n\n* pip install voidlight-markitdown[xlsx]\n* pip install voidlight-markitdown[all]\n* pip install voidlight-markitdown[xlsx, ...]\n* etc.\n\nTraceback (most recent call last):\n  File \"/Users/voidlight/voidlight_markitdown/packages/voidlight_markitdown/test_all_converters.py\", line 90, in test_converter\n    result = md.convert(str(file_path))\n  File \"/Users/voidlight/voidlight_markitdown/packages/voidlight_markitdown/src/voidlight_markitdown/_voidlight_markitdown.py\", line 284, in convert\n    return self.convert_local(source, stream_info=stream_info, **kwargs)\n  File \"/Users/voidlight/voidlight_markitdown/packages/voidlight_markitdown/src/voidlight_markitdown/_voidlight_markitdown.py\", line 338, in convert_local\n    return self._convert(file_stream=fh, stream_info_guesses=guesses, **kwargs)\n  File \"/Users/voidlight/voidlight_markitdown/packages/voidlight_markitdown/src/voidlight_markitdown/_voidlight_markitdown.py\", line 636, in _convert\n    raise FileConversionException(attempts=failed_attempts)\nvoidlight_markitdown._exceptions.FileConversionException: File conversion failed after 1 attempts:\n - XlsxConverter threw MissingDependencyException with message: XlsxConverter recognized the input as a potential .xlsx file, but the dependencies needed to read .xlsx files have not been installed. To resolve this error, include the optional dependency [xlsx] or [all] when installing VoidLight MarkItDown. For example:\n\n* pip install voidlight-markitdown[xlsx]\n* pip install voidlight-markitdown[all]\n* pip install voidlight-markitdown[xlsx, ...]\n* etc.\n\n",
+    "markdown_preview": null,
+    "korean_content_found": false
+  },
+  {
+    "converter_name": "XlsConverter",
+    "test_file": "test.xls",
+    "status": "failed",
+    "error": "FileConversionException: File conversion failed after 1 attempts:\n - XlsConverter threw MissingDependencyException with message: XlsConverter recognized the input as a potential .xls file, but the dependencies needed to read .xls files have not been installed. To resolve this error, include the optional dependency [xls] or [all] when installing VoidLight MarkItDown. For example:\n\n* pip install voidlight-markitdown[xls]\n* pip install voidlight-markitdown[all]\n* pip install voidlight-markitdown[xls, ...]\n* etc.\n\nTraceback (most recent call last):\n  File \"/Users/voidlight/voidlight_markitdown/packages/voidlight_markitdown/test_all_converters.py\", line 90, in test_converter\n    result = md.convert(str(file_path))\n  File \"/Users/voidlight/voidlight_markitdown/packages/voidlight_markitdown/src/voidlight_markitdown/_voidlight_markitdown.py\", line 284, in convert\n    return self.convert_local(source, stream_info=stream_info, **kwargs)\n  File \"/Users/voidlight/voidlight_markitdown/packages/voidlight_markitdown/src/voidlight_markitdown/_voidlight_markitdown.py\", line 338, in convert_local\n    return self._convert(file_stream=fh, stream_info_guesses=guesses, **kwargs)\n  File \"/Users/voidlight/voidlight_markitdown/packages/voidlight_markitdown/src/voidlight_markitdown/_voidlight_markitdown.py\", line 636, in _convert\n    raise FileConversionException(attempts=failed_attempts)\nvoidlight_markitdown._exceptions.FileConversionException: File conversion failed after 1 attempts:\n - XlsConverter threw MissingDependencyException with message: XlsConverter recognized the input as a potential .xls file, but the dependencies needed to read .xls files have not been installed. To resolve this error, include the optional dependency [xls] or [all] when installing VoidLight MarkItDown. For example:\n\n* pip install voidlight-markitdown[xls]\n* pip install voidlight-markitdown[all]\n* pip install voidlight-markitdown[xls, ...]\n* etc.\n\n",
+    "markdown_preview": null,
+    "korean_content_found": false
+  },
+  {
+    "converter_name": "PptxConverter",
+    "test_file": "test.pptx",
+    "status": "failed",
+    "error": "FileConversionException: File conversion failed after 1 attempts:\n - PptxConverter threw MissingDependencyException with message: PptxConverter recognized the input as a potential .pptx file, but the dependencies needed to read .pptx files have not been installed. To resolve this error, include the optional dependency [pptx] or [all] when installing VoidLight MarkItDown. For example:\n\n* pip install voidlight-markitdown[pptx]\n* pip install voidlight-markitdown[all]\n* pip install voidlight-markitdown[pptx, ...]\n* etc.\n\nTraceback (most recent call last):\n  File \"/Users/voidlight/voidlight_markitdown/packages/voidlight_markitdown/test_all_converters.py\", line 90, in test_converter\n    result = md.convert(str(file_path))\n  File \"/Users/voidlight/voidlight_markitdown/packages/voidlight_markitdown/src/voidlight_markitdown/_voidlight_markitdown.py\", line 284, in convert\n    return self.convert_local(source, stream_info=stream_info, **kwargs)\n  File \"/Users/voidlight/voidlight_markitdown/packages/voidlight_markitdown/src/voidlight_markitdown/_voidlight_markitdown.py\", line 338, in convert_local\n    return self._convert(file_stream=fh, stream_info_guesses=guesses, **kwargs)\n  File \"/Users/voidlight/voidlight_markitdown/packages/voidlight_markitdown/src/voidlight_markitdown/_voidlight_markitdown.py\", line 636, in _convert\n    raise FileConversionException(attempts=failed_attempts)\nvoidlight_markitdown._exceptions.FileConversionException: File conversion failed after 1 attempts:\n - PptxConverter threw MissingDependencyException with message: PptxConverter recognized the input as a potential .pptx file, but the dependencies needed to read .pptx files have not been installed. To resolve this error, include the optional dependency [pptx] or [all] when installing VoidLight MarkItDown. For example:\n\n* pip install voidlight-markitdown[pptx]\n* pip install voidlight-markitdown[all]\n* pip install voidlight-markitdown[pptx, ...]\n* etc.\n\n",
+    "markdown_preview": null,
+    "korean_content_found": false
+  },
+  {
+    "converter_name": "AudioConverter",
+    "test_file": "test.mp3",
+    "status": "success",
+    "error": null,
+    "markdown_preview": "Title: f67a499e-a7d0-4ca3-a49b-358bd934ae3e\nArtist: Artist Name Test String\nAlbum: Album Name Test String\nSampleRate: 48000",
+    "korean_content_found": false
+  },
+  {
+    "converter_name": "AudioConverter",
+    "test_file": "test.m4a",
+    "status": "success",
+    "error": null,
+    "markdown_preview": "CreateDate: 2025:03:05 15:12:38",
+    "korean_content_found": false
+  },
+  {
+    "converter_name": "AudioConverter",
+    "test_file": "test.wav",
+    "status": "success",
+    "error": null,
+    "markdown_preview": "NumChannels: 2\nSampleRate: 48000\nAvgBytesPerSec: 192000\nBitsPerSample: 16",
+    "korean_content_found": false
+  },
+  {
+    "converter_name": "ImageConverter",
+    "test_file": "test.jpg",
+    "status": "success",
+    "error": null,
+    "markdown_preview": "ImageSize: 1615x1967\nTitle: AutoGen: Enabling Next-Gen LLM Applications via Multi-Agent Conversation\nDescription: AutoGen enables diverse LLM-based applications using multi-agent conversations. (Left) AutoGen agents are conversable, customizable, and can be based on LLMs, tools, humans, or even a combination of them. (Top-middle) Agents can converse to solve tasks. (Right) They can form a chat, potentially with humans in the loop. (Bottom-middle) The framework supports flexible conversation patt...",
+    "korean_content_found": false
+  },
+  {
+    "converter_name": "ImageConverter",
+    "test_file": "test_llm.jpg",
+    "status": "success",
+    "error": null,
+    "markdown_preview": "ImageSize: 1692x948\n",
+    "korean_content_found": false
+  },
+  {
+    "converter_name": "IpynbConverter",
+    "test_file": "test_notebook.ipynb",
+    "status": "success",
+    "error": null,
+    "markdown_preview": "{\n \"cells\": [\n  {\n   \"cell_type\": \"markdown\",\n   \"id\": \"0f61db80\",\n   \"metadata\": {},\n   \"source\": [\n    \"# Test Notebook\"\n   ]\n  },\n  {\n   \"cell_type\": \"code\",\n   \"execution_count\": 11,\n   \"id\": \"3f2a5bbd\",\n   \"metadata\": {},\n   \"outputs\": [\n    {\n     \"name\": \"stdout\",\n     \"output_type\": \"stream\",\n     \"text\": [\n      \"markitdown\\n\"\n     ]\n    }\n   ],\n   \"source\": [\n    \"print(\\\"markitdown\\\")\"\n   ]\n  },\n  {\n   \"cell_type\": \"markdown\",\n   \"id\": \"9b9c0468\",\n   \"metadata\": {},\n   \"source\": [\n   ...",
+    "korean_content_found": false
+  },
+  {
+    "converter_name": "PdfConverter",
+    "test_file": "test.pdf",
+    "status": "success",
+    "error": null,
+    "markdown_preview": "1\n\nIntroduction\n\nLarge language models (LLMs) are becoming a crucial building block in developing powerful agents\nthat utilize LLMs for reasoning, tool usage, and adapting to new observations (Yao et al., 2022; Xi\net al., 2023; Wang et al., 2023b) in many real-world tasks. Given the expanding tasks that could\nbenefit from LLMs and the growing task complexity, an intuitive approach to scale up the power of\nagents is to use multiple agents that cooperate. Prior work suggests that multiple agents c...",
+    "korean_content_found": false
+  },
+  {
+    "converter_name": "PdfConverter",
+    "test_file": "test.pdf",
+    "status": "success",
+    "error": null,
+    "markdown_preview": "1 Introduction Large language models (LLMs) are becoming a crucial building block in developing powerful agents that utilize LLMs for reasoning, tool usage, and adapting to new observations (Yao et al., 2022; Xi et al., 2023; Wang et al., 2023b) in many real-world tasks. Given the expanding tasks that could benefit from LLMs and the growing task complexity, an intuitive approach to scale up the power of agents is to use multiple agents that cooperate. Prior work suggests that multiple agents can...",
+    "korean_content_found": false
+  },
+  {
+    "converter_name": "OutlookMsgConverter",
+    "test_file": "test_outlook_msg.msg",
+    "status": "failed",
+    "error": "FileConversionException: File conversion failed after 2 attempts:\n - OutlookMsgConverter threw MissingDependencyException with message: OutlookMsgConverter recognized the input as a potential .msg file, but the dependencies needed to read .msg files have not been installed. To resolve this error, include the optional dependency [outlook] or [all] when installing VoidLight MarkItDown. For example:\n\n* pip install voidlight-markitdown[outlook]\n* pip install voidlight-markitdown[all]\n* pip install voidlight-markitdown[outlook, ...]\n* etc.\n - OutlookMsgConverter threw MissingDependencyException with message: OutlookMsgConverter recognized the input as a potential .msg file, but the dependencies needed to read .msg files have not been installed. To resolve this error, include the optional dependency [outlook] or [all] when installing VoidLight MarkItDown. For example:\n\n* pip install voidlight-markitdown[outlook]\n* pip install voidlight-markitdown[all]\n* pip install voidlight-markitdown[outlook, ...]\n* etc.\n\nTraceback (most recent call last):\n  File \"/Users/voidlight/voidlight_markitdown/packages/voidlight_markitdown/test_all_converters.py\", line 90, in test_converter\n    result = md.convert(str(file_path))\n  File \"/Users/voidlight/voidlight_markitdown/packages/voidlight_markitdown/src/voidlight_markitdown/_voidlight_markitdown.py\", line 284, in convert\n    return self.convert_local(source, stream_info=stream_info, **kwargs)\n  File \"/Users/voidlight/voidlight_markitdown/packages/voidlight_markitdown/src/voidlight_markitdown/_voidlight_markitdown.py\", line 338, in convert_local\n    return self._convert(file_stream=fh, stream_info_guesses=guesses, **kwargs)\n  File \"/Users/voidlight/voidlight_markitdown/packages/voidlight_markitdown/src/voidlight_markitdown/_voidlight_markitdown.py\", line 636, in _convert\n    raise FileConversionException(attempts=failed_attempts)\nvoidlight_markitdown._exceptions.FileConversionException: File conversion failed after 2 attempts:\n - OutlookMsgConverter threw MissingDependencyException with message: OutlookMsgConverter recognized the input as a potential .msg file, but the dependencies needed to read .msg files have not been installed. To resolve this error, include the optional dependency [outlook] or [all] when installing VoidLight MarkItDown. For example:\n\n* pip install voidlight-markitdown[outlook]\n* pip install voidlight-markitdown[all]\n* pip install voidlight-markitdown[outlook, ...]\n* etc.\n - OutlookMsgConverter threw MissingDependencyException with message: OutlookMsgConverter recognized the input as a potential .msg file, but the dependencies needed to read .msg files have not been installed. To resolve this error, include the optional dependency [outlook] or [all] when installing VoidLight MarkItDown. For example:\n\n* pip install voidlight-markitdown[outlook]\n* pip install voidlight-markitdown[all]\n* pip install voidlight-markitdown[outlook, ...]\n* etc.\n\n",
+    "markdown_preview": null,
+    "korean_content_found": false
+  },
+  {
+    "converter_name": "EpubConverter",
+    "test_file": "test.epub",
+    "status": "failed",
+    "error": "FileConversionException: File conversion failed after 1 attempts:\n - EpubConverter threw TypeError with message: __init__() got an unexpected keyword argument 'title'\n\nTraceback (most recent call last):\n  File \"/Users/voidlight/voidlight_markitdown/packages/voidlight_markitdown/test_all_converters.py\", line 90, in test_converter\n    result = md.convert(str(file_path))\n  File \"/Users/voidlight/voidlight_markitdown/packages/voidlight_markitdown/src/voidlight_markitdown/_voidlight_markitdown.py\", line 284, in convert\n    return self.convert_local(source, stream_info=stream_info, **kwargs)\n  File \"/Users/voidlight/voidlight_markitdown/packages/voidlight_markitdown/src/voidlight_markitdown/_voidlight_markitdown.py\", line 338, in convert_local\n    return self._convert(file_stream=fh, stream_info_guesses=guesses, **kwargs)\n  File \"/Users/voidlight/voidlight_markitdown/packages/voidlight_markitdown/src/voidlight_markitdown/_voidlight_markitdown.py\", line 636, in _convert\n    raise FileConversionException(attempts=failed_attempts)\nvoidlight_markitdown._exceptions.FileConversionException: File conversion failed after 1 attempts:\n - EpubConverter threw TypeError with message: __init__() got an unexpected keyword argument 'title'\n\n",
+    "markdown_preview": null,
+    "korean_content_found": false
+  },
+  {
+    "converter_name": "ZipConverter",
+    "test_file": "test_files.zip",
+    "status": "success",
+    "error": null,
+    "markdown_preview": "Content from the zip file `/Users/voidlight/voidlight_markitdown/packages/voidlight_markitdown/tests/test_files/test_files.zip`:\n\n## File: test.jpg\n\nImageSize: 1615x1967\nTitle: AutoGen: Enabling Next-Gen LLM Applications via Multi-Agent Conversation\nDescription: AutoGen enables diverse LLM-based applications using multi-agent conversations. (Left) AutoGen agents are conversable, customizable, and can be based on LLMs, tools, humans, or even a combination of them. (Top-middle) Agents can converse...",
+    "korean_content_found": false
+  },
+  {
+    "converter_name": "CsvConverter",
+    "test_file": "test_mskanji.csv",
+    "status": "success",
+    "error": null,
+    "markdown_preview": "| 名前 | 年齢 | 住所 |\n| --- | --- | --- |\n| 佐藤太郎 | 30 | 東京 |\n| 三木英子 | 25 | 大阪 |\n| 髙橋淳 | 35 | 名古屋 |",
+    "korean_content_found": false
+  },
+  {
+    "converter_name": "CsvConverter",
+    "test_file": "test_mskanji.csv",
+    "status": "success",
+    "error": null,
+    "markdown_preview": "| 隼酏Ⲕ亗轚辊ഊ趲鎡醾顙ⰳ〬鎌讞ഊ蹏雘襰蹱ⰲ㔬釥跣ഊ讴轾ⰳ㔬隼賃覮ഊ | | --- |",
+    "korean_content_found": false
+  }
+]

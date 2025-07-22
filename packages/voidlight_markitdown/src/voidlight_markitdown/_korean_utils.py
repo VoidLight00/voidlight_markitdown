@@ -2,6 +2,7 @@ import re
 import unicodedata
 from typing import Optional, Dict, Any, List, Tuple
 import logging
+from ._korean_nlp_init import get_korean_nlp_status
 
 # Optional imports with fallbacks
 try:
@@ -76,6 +77,7 @@ class KoreanTextProcessor:
         """Initialize Korean text processor with available NLP tools."""
         self.kiwi = None
         self.okt = None
+        self.nlp_status = get_korean_nlp_status()
         
         # Initialize Kiwi if available (preferred for performance)
         if KIWI_AVAILABLE:
@@ -91,11 +93,46 @@ class KoreanTextProcessor:
         # Fallback to KoNLPy if Kiwi is not available
         if not self.kiwi and KONLPY_AVAILABLE:
             try:
-                self.okt = Okt()
-                logger.info("Okt tokenizer initialized as fallback")
+                # Check if Java dependencies are met
+                if self.nlp_status.dependencies_status['konlpy'].get('functional', False):
+                    self.okt = Okt()
+                    logger.info("Okt tokenizer initialized as fallback")
+                else:
+                    logger.warning("KoNLPy available but Java dependencies not met")
             except Exception as e:
                 logger.warning(f"Failed to initialize Okt: {e}")
                 self.okt = None
+        
+        # Log initialization status
+        self._log_initialization_status()
+    
+    def _log_initialization_status(self):
+        """Log the initialization status of Korean NLP components."""
+        status_parts = []
+        
+        if self.kiwi:
+            status_parts.append("Kiwi")
+        if self.okt:
+            status_parts.append("Okt")
+            
+        if status_parts:
+            logger.info(f"Korean NLP initialized with: {', '.join(status_parts)}")
+        else:
+            logger.warning("No Korean NLP tokenizers available - using fallback methods")
+            
+        # Log optional components
+        optional_status = []
+        if SOYNLP_AVAILABLE:
+            optional_status.append("soynlp")
+        if HANSPELL_AVAILABLE:
+            optional_status.append("hanspell")
+        if JAMO_AVAILABLE:
+            optional_status.append("jamo")
+        if HANJA_AVAILABLE:
+            optional_status.append("hanja")
+            
+        if optional_status:
+            logger.debug(f"Optional Korean modules available: {', '.join(optional_status)}")
     
     def _add_kiwi_user_words(self):
         """Add common user words to Kiwi dictionary."""
@@ -116,9 +153,9 @@ class KoreanTextProcessor:
         
         for word, tag in tech_terms:
             try:
-                self.kiwi.add_user_word(word, tag)
-            except:
-                pass
+                self.kiwi.add_user_word(word, tag, 5.0)  # Add with default score
+            except Exception as e:
+                logger.debug(f"Failed to add user word '{word}': {e}")
     
     @staticmethod
     def is_korean_char(char: str) -> bool:
@@ -257,26 +294,48 @@ class KoreanTextProcessor:
         
         return text
     
-    def tokenize(self, text: str) -> List[Tuple[str, str]]:
+    def tokenize(self, text: str, normalize: bool = True) -> List[Tuple[str, str]]:
         """Tokenize Korean text with POS tagging.
         
-        Returns list of (token, pos_tag) tuples.
+        Args:
+            text: Text to tokenize
+            normalize: Whether to normalize text before tokenization
+            
+        Returns:
+            List of (token, pos_tag) tuples.
         """
+        if normalize:
+            text = self.normalize_korean_text(text)
+            
         if self.kiwi:
             try:
                 result = self.kiwi.tokenize(text)
                 return [(token.form, token.tag) for token in result]
-            except:
-                pass
+            except Exception as e:
+                logger.debug(f"Kiwi tokenization failed: {e}")
         
         if self.okt:
             try:
-                return self.okt.pos(text)
-            except:
-                pass
+                return self.okt.pos(text, norm=normalize, stem=False)
+            except Exception as e:
+                logger.debug(f"Okt tokenization failed: {e}")
         
-        # Fallback: simple whitespace tokenization
-        return [(token, 'UNK') for token in text.split()]
+        # Fallback: simple whitespace tokenization with basic POS guessing
+        tokens = []
+        for token in text.split():
+            if self.is_korean_char(token[0] if token else ''):
+                # Basic POS tagging for Korean
+                if token.endswith(('다', '요', '니다', '습니다')):
+                    pos = 'VV'  # Verb
+                elif token.endswith(('은', '는', '이', '가', '을', '를')):
+                    pos = 'JK'  # Particle
+                else:
+                    pos = 'NN'  # Noun (default)
+            else:
+                pos = 'SL' if re.match(r'^[a-zA-Z]+$', token) else 'SY'
+            tokens.append((token, pos))
+        
+        return tokens
     
     def extract_nouns(self, text: str) -> List[str]:
         """Extract nouns from Korean text."""
@@ -429,12 +488,15 @@ class KoreanTextProcessor:
                 # Kiwi has built-in sentence segmentation
                 result = self.kiwi.split_into_sents(text)
                 return [sent.text for sent in result]
-            except:
-                pass
+            except Exception as e:
+                logger.debug(f"Kiwi sentence segmentation failed: {e}")
         
-        # Fallback: simple rule-based segmentation
-        # Korean sentence endings
+        # Enhanced rule-based segmentation
+        # Korean sentence endings with context
         sentence_endings = r'([.!?。！？…])\s*'
+        
+        # Special handling for quotes and parentheses
+        text = re.sub(r'([.!?。！？…])(["\'])\s*', r'\1\2\n', text)
         
         sentences = re.split(sentence_endings, text)
         
@@ -479,3 +541,234 @@ class KoreanTextProcessor:
         sorted_keywords = sorted(tf_scores.items(), key=lambda x: x[1], reverse=True)
         
         return sorted_keywords[:num_keywords]
+    
+    def correct_spacing(self, text: str) -> str:
+        """Correct spacing in Korean text using available NLP tools.
+        
+        Korean text often has spacing issues that need correction.
+        """
+        if not text:
+            return text
+            
+        if self.kiwi:
+            try:
+                # Kiwi has built-in spacing correction
+                result = self.kiwi.space(text)
+                if result and hasattr(result, 'text'):
+                    return result.text
+                elif isinstance(result, str):
+                    return result
+            except Exception as e:
+                logger.debug(f"Kiwi spacing correction failed: {e}")
+        
+        # Fallback: No spacing correction available
+        logger.debug("No spacing correction available, returning original text")
+        return text
+    
+    def get_morphemes(self, text: str) -> List[Dict[str, str]]:
+        """Extract morphemes from Korean text.
+        
+        Returns:
+            List of dicts with 'surface', 'pos', and 'lemma' keys.
+        """
+        morphemes = []
+        
+        if self.kiwi:
+            try:
+                result = self.kiwi.tokenize(text)
+                for token in result:
+                    morphemes.append({
+                        'surface': token.form,
+                        'pos': token.tag,
+                        'lemma': token.form,  # Kiwi doesn't provide lemma directly
+                        'start': token.start,
+                        'end': token.end
+                    })
+                return morphemes
+            except Exception as e:
+                logger.debug(f"Kiwi morpheme extraction failed: {e}")
+        
+        if self.okt:
+            try:
+                # Get morphemes with normalization
+                result = self.okt.morphs(text, stem=True)
+                pos_result = self.okt.pos(text, stem=True)
+                
+                # Combine morpheme and POS information
+                for i, (morph, pos) in enumerate(pos_result):
+                    morphemes.append({
+                        'surface': morph,
+                        'pos': pos,
+                        'lemma': morph,  # Okt returns stemmed form
+                        'start': -1,  # Okt doesn't provide positions
+                        'end': -1
+                    })
+                return morphemes
+            except Exception as e:
+                logger.debug(f"Okt morpheme extraction failed: {e}")
+        
+        # Fallback: Basic tokenization
+        tokens = self.tokenize(text)
+        for i, (token, pos) in enumerate(tokens):
+            morphemes.append({
+                'surface': token,
+                'pos': pos,
+                'lemma': token,
+                'start': -1,
+                'end': -1
+            })
+        
+        return morphemes
+    
+    def analyze_formality(self, text: str) -> Dict[str, Any]:
+        """Analyze the formality level of Korean text.
+        
+        Returns dict with formality indicators.
+        """
+        analysis = {
+            'formality_level': 'unknown',
+            'honorific_count': 0,
+            'formal_endings': 0,
+            'informal_endings': 0,
+            'polite_particles': 0
+        }
+        
+        # Formal endings
+        formal_patterns = [
+            r'\uc2b5\ub2c8\ub2e4$',  # 습니다
+            r'\uc785\ub2c8\ub2e4$',  # 입니다
+            r'\uc2b5\ub2c8\uae4c$',  # 습니까
+            r'\uc785\ub2c8\uae4c$',  # 입니까
+            r'\uc138\uc694$',        # 세요
+            r'\uc5b4\uc694$',        # 어요/아요
+            r'\uc544\uc694$'
+        ]
+        
+        # Informal endings
+        informal_patterns = [
+            r'\ub2e4$',              # 다
+            r'\ub0d0$',              # 냐
+            r'\uc5b4$',              # 어/아
+            r'\uc544$',
+            r'\uc9c0$'               # 지
+        ]
+        
+        # Honorific words
+        honorific_words = [
+            '\ub2d8',                # 님
+            '\uaed8\uc11c',          # 께서
+            '\ub4dc\ub9ac\ub2e4',    # 드리다
+            '\ubaa8\uc2dc\ub2e4',    # 모시다
+            '\uc5ec\ucfed\ub2e4'     # 여쭙다
+        ]
+        
+        # Analyze sentences
+        sentences = self.segment_sentences(text)
+        
+        for sentence in sentences:
+            # Check formal endings
+            for pattern in formal_patterns:
+                if re.search(pattern, sentence):
+                    analysis['formal_endings'] += 1
+                    break
+            
+            # Check informal endings
+            for pattern in informal_patterns:
+                if re.search(pattern, sentence):
+                    analysis['informal_endings'] += 1
+                    break
+            
+            # Count honorifics
+            for honorific in honorific_words:
+                analysis['honorific_count'] += sentence.count(honorific)
+        
+        # Determine overall formality level
+        total_sentences = len(sentences)
+        if total_sentences > 0:
+            formal_ratio = analysis['formal_endings'] / total_sentences
+            
+            if formal_ratio > 0.7:
+                analysis['formality_level'] = 'formal'
+            elif formal_ratio > 0.3:
+                analysis['formality_level'] = 'polite'
+            else:
+                analysis['formality_level'] = 'informal'
+        
+        return analysis
+    
+    def get_reading_difficulty(self, text: str) -> Dict[str, Any]:
+        """Estimate reading difficulty of Korean text.
+        
+        Returns dict with difficulty metrics.
+        """
+        difficulty = {
+            'level': 'unknown',
+            'avg_word_length': 0,
+            'avg_sentence_length': 0,
+            'hanja_ratio': 0,
+            'complex_word_ratio': 0,
+            'unique_word_ratio': 0
+        }
+        
+        # Get basic metrics
+        metadata = self.extract_korean_metadata(text)
+        difficulty['hanja_ratio'] = metadata.get('hanja_ratio', 0)
+        
+        # Sentence analysis
+        sentences = self.segment_sentences(text)
+        if sentences:
+            words_per_sentence = []
+            for sent in sentences:
+                tokens = self.tokenize(sent)
+                # Count only content words (not particles)
+                content_words = [t for t, pos in tokens if not pos.startswith('J')]
+                words_per_sentence.append(len(content_words))
+            
+            difficulty['avg_sentence_length'] = sum(words_per_sentence) / len(words_per_sentence)
+        
+        # Word analysis
+        tokens = self.tokenize(text)
+        if tokens:
+            words = [token for token, pos in tokens if not pos.startswith('J')]
+            if words:
+                # Average word length
+                difficulty['avg_word_length'] = sum(len(w) for w in words) / len(words)
+                
+                # Unique word ratio
+                unique_words = set(words)
+                difficulty['unique_word_ratio'] = len(unique_words) / len(words)
+                
+                # Complex words (3+ syllables)
+                complex_words = [w for w in words if len(w) >= 3]
+                difficulty['complex_word_ratio'] = len(complex_words) / len(words)
+        
+        # Estimate difficulty level
+        score = 0
+        
+        # Sentence length factor
+        if difficulty['avg_sentence_length'] > 15:
+            score += 2
+        elif difficulty['avg_sentence_length'] > 10:
+            score += 1
+        
+        # Word complexity factor
+        if difficulty['complex_word_ratio'] > 0.3:
+            score += 2
+        elif difficulty['complex_word_ratio'] > 0.2:
+            score += 1
+        
+        # Hanja factor
+        if difficulty['hanja_ratio'] > 0.1:
+            score += 2
+        elif difficulty['hanja_ratio'] > 0.05:
+            score += 1
+        
+        # Determine level
+        if score >= 4:
+            difficulty['level'] = 'advanced'
+        elif score >= 2:
+            difficulty['level'] = 'intermediate'
+        else:
+            difficulty['level'] = 'beginner'
+        
+        return difficulty

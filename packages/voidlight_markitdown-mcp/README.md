@@ -161,6 +161,24 @@ Finally:
 * click `convert_to_markdown` or `convert_korean_document`
 * run the tool on any valid URI
 
+## HTTP/SSE Client Requirements / HTTP/SSE 클라이언트 요구사항
+
+When using HTTP or SSE mode, clients must send the proper Accept header:
+HTTP 또는 SSE 모드를 사용할 때 클라이언트는 올바른 Accept 헤더를 보내야 합니다:
+
+```python
+headers = {
+    'Content-Type': 'application/json',
+    'Accept': 'application/json, text/event-stream'  # Required for Streamable HTTP!
+}
+
+# Send all requests to the /mcp endpoint
+response = requests.post('http://localhost:3001/mcp', json=request, headers=headers)
+```
+
+Without the proper Accept header, you will receive a `406 Not Acceptable` error.
+올바른 Accept 헤더가 없으면 `406 Not Acceptable` 오류가 발생합니다.
+
 ## Environment Variables / 환경 변수
 
 - `VOIDLIGHT_MARKITDOWN_ENABLE_PLUGINS` - Enable/disable plugins (default: "false") / 플러그인 활성화/비활성화 (기본값: "false")

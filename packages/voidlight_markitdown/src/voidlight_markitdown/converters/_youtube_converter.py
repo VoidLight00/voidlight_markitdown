@@ -219,7 +219,8 @@ class YouTubeConverter(DocumentConverter):
             for k, v in json.items():
                 if k == key:
                     return json[k]
-                if result := self._findKey(v, key):
+                result = self._findKey(v, key)
+                if result:
                     return result
         return None
 

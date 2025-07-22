@@ -1,0 +1,58 @@
+# Core dependencies
+beautifulsoup4>=4.11.1
+markdownify>=0.11.6
+charset-normalizer>=3.1.0
+magika>=0.5.1
+requests>=2.28.2
+tabulate>=0.9.0
+
+# Optional dependencies
+# To install all optional dependencies: pip install -r requirements-all.txt
+
+# Document processing
+python-docx>=0.8.11
+mammoth>=1.5.1
+python-pptx>=0.6.21
+openpyxl>=3.0.10
+pandas>=1.5.3
+xlrd>=2.0.1
+pdfplumber>=0.10.2
+PyPDF2>=3.0.1
+ebooklib>=0.18
+extract-msg>=0.41.1
+
+# Media processing
+pillow>=9.5.0
+pytesseract>=0.3.10
+easyocr>=1.7.1
+SpeechRecognition>=3.10.0
+pydub>=0.25.1
+
+# Web/API
+feedparser>=6.0.10
+youtube-transcript-api>=0.6.0
+
+# Archive handling
+rarfile>=4.0
+py7zr>=0.20.0
+
+# Korean language support
+konlpy>=0.6.0
+kiwipiepy>=0.17.1
+soynlp>=0.0.493
+jamo>=0.4.1
+hanja>=0.13.3
+# py-hanspell>=1.1  # Note: Requires separate installation, see README
+
+# LLM/AI features (optional)
+openai>=1.0.0
+azure-cognitiveservices-speech>=1.34.0
+
+# Docling (optional, heavyweight)
+# docling>=2.14.0  # Uncomment if needed
+
+# Development dependencies
+pytest>=7.2.2
+hatch
+mypy>=1.0.0
+ipykernel
