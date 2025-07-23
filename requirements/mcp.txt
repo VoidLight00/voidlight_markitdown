@@ -1,0 +1,29 @@
+# MCP Server specific requirements
+# These are additional dependencies needed for the MCP server
+
+# MCP SDK (when available)
+# mcp-sdk>=1.0.0
+
+# Server framework
+fastapi==0.109.0
+uvicorn[standard]==0.27.0
+
+# WebSocket support
+websockets==12.0
+python-socketio==5.10.0
+
+# JSON-RPC
+jsonrpc-websocket==3.1.4
+jsonrpc-requests==0.6.2
+
+# Async utilities
+aiofiles==23.2.1
+aiodns==3.1.1
+aiohttp==3.9.3
+
+# Protocol validation
+jsonschema==4.21.1
+pydantic==2.6.1
+
+# Server monitoring
+aiomonitor==0.6.0

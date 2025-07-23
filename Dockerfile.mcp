@@ -1,0 +1,66 @@
+# Dockerfile for MCP Server
+# Optimized for Model Context Protocol server deployment
+
+FROM python:3.11-slim
+
+# Build arguments
+ARG BUILD_DATE
+ARG VCS_REF
+ARG VERSION
+
+# Labels
+LABEL maintainer="VoidLight <voidlight@example.com>" \
+      org.label-schema.build-date=$BUILD_DATE \
+      org.label-schema.name="voidlight-markitdown-mcp" \
+      org.label-schema.description="MCP server for voidlight-markitdown" \
+      org.label-schema.vcs-ref=$VCS_REF \
+      org.label-schema.version=$VERSION
+
+# Install system dependencies
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    curl \
+    && rm -rf /var/lib/apt/lists/*
+
+# Create non-root user
+RUN groupadd -r mcp && useradd -r -g mcp mcp
+
+# Set working directory
+WORKDIR /app
+
+# Copy requirements
+COPY requirements/production.txt requirements/mcp.txt /tmp/
+
+# Install dependencies
+RUN pip install --upgrade pip setuptools wheel && \
+    pip install --no-cache-dir -r /tmp/production.txt && \
+    pip install --no-cache-dir -r /tmp/mcp.txt
+
+# Copy application code
+COPY src/voidlight_markitdown_mcp /app/src/voidlight_markitdown_mcp
+COPY src/voidlight_markitdown /app/src/voidlight_markitdown
+COPY pyproject.toml /app/
+
+# Install the package
+RUN pip install --no-cache-dir -e .
+
+# Create necessary directories
+RUN mkdir -p /app/logs /app/tmp && \
+    chown -R mcp:mcp /app
+
+# Switch to non-root user
+USER mcp
+
+# Environment variables
+ENV PYTHONPATH="/app/src:$PYTHONPATH" \
+    PYTHONUNBUFFERED=1 \
+    MCP_TRANSPORT=stdio
+
+# Expose MCP port (if using TCP transport)
+EXPOSE 3000
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
+    CMD python -c "import voidlight_markitdown_mcp; print('healthy')" || exit 1
+
+# Default command for stdio transport
+CMD ["python", "-m", "voidlight_markitdown_mcp.server"]

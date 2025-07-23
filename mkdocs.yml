@@ -1,0 +1,164 @@
+site_name: VoidLight MarkItDown Documentation
+site_description: Enterprise-grade document-to-markdown conversion with advanced Korean language support
+site_author: VoidLight Team
+site_url: https://voidlight00.github.io/voidlight_markitdown
+
+repo_name: VoidLight00/voidlight_markitdown
+repo_url: https://github.com/VoidLight00/voidlight_markitdown
+edit_uri: edit/main/docs/
+
+theme:
+  name: material
+  custom_dir: docs/overrides
+  logo: assets/logo.png
+  favicon: assets/favicon.ico
+  features:
+    - navigation.tabs
+    - navigation.sections
+    - navigation.expand
+    - navigation.path
+    - navigation.top
+    - navigation.tracking
+    - navigation.indexes
+    - search.suggest
+    - search.highlight
+    - search.share
+    - content.code.annotate
+    - content.code.copy
+    - content.tabs.link
+    - toc.follow
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+  font:
+    text: Roboto
+    code: Roboto Mono
+
+plugins:
+  - search:
+      lang:
+        - en
+        - ko
+  - minify:
+      minify_html: true
+  - git-revision-date-localized:
+      enable_creation_date: true
+  - mkdocstrings:
+      handlers:
+        python:
+          options:
+            show_source: true
+            show_if_no_docstring: true
+
+markdown_extensions:
+  - abbr
+  - admonition
+  - attr_list
+  - def_list
+  - footnotes
+  - meta
+  - md_in_html
+  - toc:
+      permalink: true
+      toc_depth: 3
+  - pymdownx.arithmatex:
+      generic: true
+  - pymdownx.betterem:
+      smart_enable: all
+  - pymdownx.caret
+  - pymdownx.details
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.keys
+  - pymdownx.mark
+  - pymdownx.smartsymbols
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  - pymdownx.tilde
+
+nav:
+  - Home: index.md
+  - Getting Started:
+    - guides/getting-started.md
+    - guides/basic-usage.md
+    - guides/examples.md
+    - guides/faq.md
+  - User Guides:
+    - guides/index.md
+    - Korean Features: guides/korean-features.md
+    - File Formats: guides/file-formats.md
+    - CLI Guide: guides/cli.md
+    - MCP Server: guides/mcp-server.md
+    - Advanced Features: guides/advanced-features.md
+    - Troubleshooting: guides/troubleshooting.md
+  - API Reference:
+    - api/index.md
+    - Python API: api/python-api.md
+    - MCP Protocol API: api/mcp-api.md
+    - REST API: api/rest-api.md
+    - Converters: api/converters.md
+  - Development:
+    - development/index.md
+    - Architecture: development/architecture.md
+    - Setup Guide: development/setup.md
+    - Contributing: development/contributing.md
+    - Testing: development/testing.md
+    - Plugin Development: development/plugins.md
+    - Code of Conduct: development/code-of-conduct.md
+    - Security: development/security.md
+  - Deployment:
+    - deployment/index.md
+    - Production Deployment: deployment/production-deployment.md
+    - Docker: deployment/docker.md
+    - Kubernetes: deployment/kubernetes.md
+    - Performance Tuning: deployment/performance.md
+    - Monitoring: deployment/monitoring.md
+    - Migration Guide: deployment/migration-plan.md
+
+extra:
+  version:
+    provider: mike
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/VoidLight00/voidlight_markitdown
+    - icon: fontawesome/brands/discord
+      link: https://discord.gg/voidlight
+  analytics:
+    provider: google
+    property: G-XXXXXXXXXX
+
+extra_css:
+  - stylesheets/extra.css
+
+extra_javascript:
+  - javascripts/mathjax.js
+  - https://polyfill.io/v3/polyfill.min.js?features=es6
+  - https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js
+
+copyright: |
+  &copy; 2024 <a href="https://github.com/VoidLight00"  target="_blank" rel="noopener">VoidLight Team</a>

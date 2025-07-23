@@ -1,0 +1,102 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: markitdown-config
+  namespace: markitdown
+  labels:
+    app.kubernetes.io/name: markitdown
+    app.kubernetes.io/component: configuration
+data:
+  # Application configuration
+  app.yaml: |
+    environment: production
+    debug: false
+    
+    logging:
+      level: INFO
+      format: json
+      
+    server:
+      host: 0.0.0.0
+      port: 8000
+      workers: 4
+      
+    redis:
+      host: markitdown-redis
+      port: 6379
+      db: 0
+      
+    metrics:
+      enabled: true
+      port: 9090
+      
+    tracing:
+      enabled: true
+      jaeger_host: markitdown-jaeger
+      jaeger_port: 6831
+      
+  # MCP configuration
+  mcp.yaml: |
+    transport: stdio
+    capabilities:
+      - convert
+      - extract
+      - analyze
+      
+    limits:
+      max_file_size: 100MB
+      timeout: 300s
+      
+  # Prometheus configuration
+  prometheus.yaml: |
+    global:
+      scrape_interval: 15s
+      evaluation_interval: 15s
+      
+    scrape_configs:
+      - job_name: 'markitdown'
+        static_configs:
+          - targets: ['localhost:9090']
+            
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: markitdown-scripts
+  namespace: markitdown
+  labels:
+    app.kubernetes.io/name: markitdown
+    app.kubernetes.io/component: scripts
+data:
+  # Health check script
+  health-check.sh: |
+    #!/bin/bash
+    set -e
+    
+    # Check if the application is responsive
+    python -c "import voidlight_markitdown; print('Application loaded')"
+    
+    # Check Redis connection
+    python -c "
+    import redis
+    r = redis.Redis(host='markitdown-redis', port=6379, db=0)
+    r.ping()
+    print('Redis connection OK')
+    "
+    
+    echo "Health check passed"
+    
+  # Startup script
+  startup.sh: |
+    #!/bin/bash
+    set -e
+    
+    echo "Starting voidlight-markitdown..."
+    
+    # Run migrations if needed
+    if [ -f "/app/scripts/migrate.py" ]; then
+      python /app/scripts/migrate.py
+    fi
+    
+    # Start the application
+    exec python -m voidlight_markitdown

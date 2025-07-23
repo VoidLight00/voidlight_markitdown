@@ -1,0 +1,138 @@
+graph TB
+    %% External Clients
+    subgraph "External Clients"
+        CLI[CLI Tool]
+        PythonAPI[Python API]
+        MCPClient[MCP Clients]
+        WebApp[Web Applications]
+        AI[AI Assistants]
+    end
+
+    %% API Gateway
+    subgraph "API Gateway Layer"
+        Gateway[API Gateway]
+        RateLimit[Rate Limiter]
+        Auth[Authentication]
+        Router[Request Router]
+    end
+
+    %% Service Layer
+    subgraph "Service Orchestration"
+        Orchestrator[Service Orchestrator]
+        LoadBalancer[Load Balancer]
+        Queue[Task Queue]
+    end
+
+    %% Core Services
+    subgraph "Core Services"
+        subgraph "Conversion Engine"
+            ConverterCore[Converter Core]
+            StreamProcessor[Stream Processor]
+            FormatDetector[Format Detector]
+        end
+        
+        subgraph "MCP Server"
+            MCPHandler[MCP Handler]
+            STDIO[STDIO Mode]
+            HTTP[HTTP/SSE Mode]
+        end
+    end
+
+    %% Converter Plugins
+    subgraph "Converter Plugins"
+        PDF[PDF Converter]
+        DOCX[DOCX Converter]
+        Excel[Excel Converter]
+        HTML[HTML Converter]
+        Image[Image Converter]
+        Audio[Audio Converter]
+        Korean[Korean Processor]
+    end
+
+    %% Supporting Services
+    subgraph "Supporting Services"
+        subgraph "Korean NLP"
+            Tokenizer[Tokenizer]
+            POS[POS Tagger]
+            NER[NER Engine]
+        end
+        
+        subgraph "OCR Engine"
+            Tesseract[Tesseract]
+            EasyOCR[EasyOCR]
+            KoreanOCR[Korean OCR]
+        end
+        
+        Cache[Cache Layer]
+        Logger[Logging Service]
+    end
+
+    %% Storage
+    subgraph "Storage Layer"
+        FileSystem[File System]
+        TempStorage[Temp Storage]
+        ResultCache[Result Cache]
+        ConfigStore[Config Store]
+    end
+
+    %% Connections
+    CLI --> Gateway
+    PythonAPI --> Gateway
+    MCPClient --> Gateway
+    WebApp --> Gateway
+    AI --> MCPHandler
+
+    Gateway --> RateLimit
+    RateLimit --> Auth
+    Auth --> Router
+    Router --> Orchestrator
+
+    Orchestrator --> LoadBalancer
+    LoadBalancer --> ConverterCore
+    LoadBalancer --> MCPHandler
+    Orchestrator --> Queue
+
+    ConverterCore --> FormatDetector
+    FormatDetector --> PDF
+    FormatDetector --> DOCX
+    FormatDetector --> Excel
+    FormatDetector --> HTML
+    FormatDetector --> Image
+    FormatDetector --> Audio
+
+    ConverterCore --> StreamProcessor
+    StreamProcessor --> TempStorage
+
+    PDF --> Korean
+    DOCX --> Korean
+    Excel --> Korean
+    Korean --> Tokenizer
+    Korean --> POS
+    Korean --> NER
+
+    Image --> OCR Engine
+    PDF --> OCR Engine
+    
+    ConverterCore --> Cache
+    Cache --> ResultCache
+    
+    ConverterCore --> Logger
+    MCPHandler --> Logger
+    
+    MCPHandler --> STDIO
+    MCPHandler --> HTTP
+
+    %% Styling
+    classDef client fill:#e1f5fe,stroke:#01579b,stroke-width:2px
+    classDef gateway fill:#f3e5f5,stroke:#4a148c,stroke-width:2px
+    classDef core fill:#e8f5e9,stroke:#1b5e20,stroke-width:2px
+    classDef converter fill:#fff3e0,stroke:#e65100,stroke-width:2px
+    classDef support fill:#fce4ec,stroke:#880e4f,stroke-width:2px
+    classDef storage fill:#f5f5f5,stroke:#424242,stroke-width:2px
+
+    class CLI,PythonAPI,MCPClient,WebApp,AI client
+    class Gateway,RateLimit,Auth,Router gateway
+    class ConverterCore,StreamProcessor,FormatDetector,MCPHandler,STDIO,HTTP core
+    class PDF,DOCX,Excel,HTML,Image,Audio,Korean converter
+    class Tokenizer,POS,NER,Tesseract,EasyOCR,KoreanOCR,Cache,Logger support
+    class FileSystem,TempStorage,ResultCache,ConfigStore storage

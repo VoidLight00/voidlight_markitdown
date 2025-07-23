@@ -1,0 +1,30 @@
+#!/bin/bash
+# Pre-commit hook for voidlight_markitdown
+
+set -euo pipefail
+
+echo "Running pre-commit checks..."
+
+# Run pre-commit hooks if installed
+if command -v pre-commit &> /dev/null; then
+    pre-commit run --all-files
+else
+    echo "Warning: pre-commit not installed. Install it with: pip install pre-commit"
+    
+    # Fallback to basic checks
+    echo "Running basic format checks..."
+    
+    # Check for debugging print statements
+    if git diff --cached --name-only | grep '\.py$' | xargs grep -l 'print(' | grep -v '^tests/' | grep -v '^examples/' | grep -v '^scripts/'; then
+        echo "Error: Found print statements in production code"
+        exit 1
+    fi
+    
+    # Check for pdb imports
+    if git diff --cached --name-only | grep '\.py$' | xargs grep -l 'import pdb\|pdb\.set_trace()'; then
+        echo "Error: Found pdb debugging statements"
+        exit 1
+    fi
+fi
+
+echo "Pre-commit checks passed!"

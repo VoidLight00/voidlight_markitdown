@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: markitdown
+  labels:
+    name: markitdown
+    environment: production
+    app.kubernetes.io/name: markitdown
+    app.kubernetes.io/instance: production
+    app.kubernetes.io/component: namespace
+    app.kubernetes.io/part-of: voidlight-markitdown
+    app.kubernetes.io/managed-by: kubectl

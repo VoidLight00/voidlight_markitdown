@@ -1,0 +1,28 @@
+#!/bin/bash
+# Pre-push hook for voidlight_markitdown
+
+set -euo pipefail
+
+echo "Running pre-push checks..."
+
+# Run tests
+echo "Running unit tests..."
+python -m pytest tests/unit/ -x --tb=short --quiet || {
+    echo "Error: Unit tests failed. Fix them before pushing."
+    exit 1
+}
+
+# Run type checking
+echo "Running type checks..."
+mypy src/voidlight_markitdown --config-file=pyproject.toml || {
+    echo "Error: Type checking failed. Fix type errors before pushing."
+    exit 1
+}
+
+# Check for security issues
+echo "Running security checks..."
+bandit -r src/ -ll || {
+    echo "Warning: Security issues found. Review them before pushing."
+}
+
+echo "Pre-push checks passed!"

@@ -1,0 +1,40 @@
+{
+  "docker": {
+    "registry": "docker.io",
+    "image": "voidlight/voidlight-markitdown",
+    "staging_tag": "staging",
+    "production_tag": "latest"
+  },
+  "kubernetes": {
+    "staging_namespace": "staging",
+    "production_namespace": "production",
+    "deployment_name": "voidlight-markitdown",
+    "service_name": "voidlight-markitdown-service"
+  },
+  "staging": {
+    "host": "staging.example.com",
+    "url": "https://staging.example.com",
+    "ssh_user": "deploy"
+  },
+  "production": {
+    "hosts": [
+      "prod1.example.com",
+      "prod2.example.com"
+    ],
+    "url": "https://api.example.com",
+    "ssh_user": "deploy"
+  },
+  "pypi": {
+    "repository": "https://upload.pypi.org/legacy/",
+    "test_repository": "https://test.pypi.org/legacy/"
+  },
+  "github": {
+    "owner": "voidlight",
+    "repo": "voidlight_markitdown"
+  },
+  "monitoring": {
+    "healthcheck_endpoint": "/health",
+    "metrics_endpoint": "/metrics",
+    "alert_webhook": "https://hooks.slack.com/services/YOUR/WEBHOOK/HERE"
+  }
+}

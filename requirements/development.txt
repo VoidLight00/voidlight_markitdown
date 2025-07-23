@@ -1,0 +1,67 @@
+# Development requirements for voidlight-markitdown
+# Includes all production requirements plus development tools
+
+-r production.txt
+
+# Code formatting
+black==24.1.1
+isort==5.13.2
+autopep8==2.0.4
+
+# Linting
+flake8==7.0.0
+flake8-docstrings==1.7.0
+flake8-bugbear==24.1.17
+flake8-comprehensions==3.14.0
+flake8-simplify==0.21.0
+pylint==3.0.3
+mypy==1.8.0
+types-requests==2.31.0.20240106
+types-tabulate==0.9.0.20240106
+
+# Security scanning
+bandit==1.7.6
+safety==3.0.1
+
+# Testing tools
+pytest==8.0.0
+pytest-cov==4.1.0
+pytest-mock==3.12.0
+pytest-asyncio==0.23.3
+pytest-timeout==2.2.0
+pytest-watch==4.2.0
+pytest-xdist==3.5.0
+hypothesis==6.97.4
+faker==22.5.1
+
+# Documentation
+mkdocs==1.5.3
+mkdocs-material==9.5.6
+mkdocs-mermaid2-plugin==1.1.1
+mkdocstrings==0.24.0
+mkdocstrings-python==1.8.0
+
+# Development utilities
+ipython==8.20.0
+ipdb==0.13.13
+rich==13.7.0
+httpie==3.2.2
+watchdog==3.0.0
+
+# Pre-commit hooks
+pre-commit==3.6.0
+
+# Version management
+bump2version==1.0.1
+setuptools-scm==8.0.4
+
+# Profiling
+py-spy==0.3.14
+memory-profiler==0.61.0
+line-profiler==4.1.2
+snakeviz==2.2.0
+
+# Build tools
+build==1.0.3
+twine==4.0.2
+wheel==0.42.0
