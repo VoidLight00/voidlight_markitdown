@@ -1,0 +1,482 @@
+{
+  "start_time": "2025-07-23T00:48:57.972921",
+  "environment": {
+    "python_version": "3.11.13 (main, Jun  3 2025, 18:38:25) [Clang 17.0.0 (clang-1700.0.13.3)]",
+    "platform": "darwin",
+    "mcp_server_path": "/Users/voidlight/voidlight_markitdown/mcp-env/bin/voidlight-markitdown-mcp",
+    "test_port_base": 3001
+  },
+  "tests": [],
+  "summary": {
+    "total_tests": 33,
+    "passed_tests": 13,
+    "failed_tests": 20,
+    "success_rate": 39.39393939393939,
+    "duration": 27.90595,
+    "performance_stats": {
+      "stdio_init_time": {
+        "min": 2.8231089115142822,
+        "max": 2.8231089115142822,
+        "avg": 2.8231089115142822,
+        "median": 2.8231089115142822,
+        "p95": 2.8231089115142822
+      },
+      "stdio_convert_time": {
+        "min": 0.004168033599853516,
+        "max": 0.004168033599853516,
+        "avg": 0.004168033599853516,
+        "median": 0.004168033599853516,
+        "p95": 0.004168033599853516
+      },
+      "stdio_memory_mb": {
+        "min": 457.078125,
+        "max": 457.078125,
+        "avg": 457.078125,
+        "median": 457.078125,
+        "p95": 457.078125
+      },
+      "http_init_time": {
+        "min": 0.004541873931884766,
+        "max": 0.004541873931884766,
+        "avg": 0.004541873931884766,
+        "median": 0.004541873931884766,
+        "p95": 0.004541873931884766
+      },
+      "http_convert_time": {
+        "min": 0.0022559165954589844,
+        "max": 0.0022559165954589844,
+        "avg": 0.0022559165954589844,
+        "median": 0.0022559165954589844,
+        "p95": 0.0022559165954589844
+      },
+      "http_memory_mb": {
+        "min": 460.578125,
+        "max": 460.578125,
+        "avg": 460.578125,
+        "median": 460.578125,
+        "p95": 460.578125
+      },
+      "concurrent_memory_mb": {
+        "min": 460.328125,
+        "max": 460.328125,
+        "avg": 460.328125,
+        "median": 460.328125,
+        "p95": 460.328125
+      },
+      "convert_small_time": {
+        "min": 0.00255584716796875,
+        "max": 0.00255584716796875,
+        "avg": 0.00255584716796875,
+        "median": 0.00255584716796875,
+        "p95": 0.00255584716796875
+      },
+      "convert_medium_time": {
+        "min": 0.0022859573364257812,
+        "max": 0.0022859573364257812,
+        "avg": 0.0022859573364257812,
+        "median": 0.0022859573364257812,
+        "p95": 0.0022859573364257812
+      },
+      "convert_large_time": {
+        "min": 0.002552032470703125,
+        "max": 0.002552032470703125,
+        "avg": 0.002552032470703125,
+        "median": 0.002552032470703125,
+        "p95": 0.002552032470703125
+      },
+      "rapid_request_time": {
+        "min": 0.002265787124633789,
+        "max": 0.002265787124633789,
+        "avg": 0.002265787124633789,
+        "median": 0.002265787124633789,
+        "p95": 0.002265787124633789
+      },
+      "stress_memory_mb": {
+        "min": 462.359375,
+        "max": 462.359375,
+        "avg": 462.359375,
+        "median": 462.359375,
+        "p95": 462.359375
+      }
+    },
+    "error_count": 0
+  },
+  "categories": {
+    "STDIO": {
+      "passed": 1,
+      "failed": 3,
+      "total": 4,
+      "success_rate": 25.0,
+      "tests": [
+        {
+          "name": "Initialization",
+          "passed": false,
+          "message": "Invalid JSON response",
+          "details": {
+            "response": "2025-07-23 00:49:00 - voidlight_markitdown.mcp - INFO - Starting VoidLight MarkItDown MCP server\n"
+          }
+        },
+        {
+          "name": "List Tools",
+          "passed": false,
+          "message": "Invalid JSON response",
+          "details": {
+            "response": "2025-07-23 00:49:00 - voidlight_markitdown.mcp - INFO - Starting STDIO server\n"
+          }
+        },
+        {
+          "name": "Korean Conversion",
+          "passed": false,
+          "message": "Invalid JSON response",
+          "details": {
+            "response": "2025-07-23 00:49:00 - root - WARNING - Failed to validate request: Received request before initialization was complete\n"
+          }
+        },
+        {
+          "name": "Memory Usage",
+          "passed": true,
+          "message": "Using 457.1 MB",
+          "details": {
+            "threshold": 500
+          }
+        }
+      ]
+    },
+    "HTTP/SSE": {
+      "passed": 2,
+      "failed": 1,
+      "total": 3,
+      "success_rate": 66.66666666666666,
+      "tests": [
+        {
+          "name": "Server Health",
+          "passed": true,
+          "message": "Server responded with 404",
+          "details": {}
+        },
+        {
+          "name": "SSE Endpoint",
+          "passed": true,
+          "message": "SSE endpoint accessible",
+          "details": {}
+        },
+        {
+          "name": "MCP Initialize",
+          "passed": false,
+          "message": "Status 406",
+          "details": {}
+        }
+      ]
+    },
+    "Concurrent": {
+      "passed": 0,
+      "failed": 1,
+      "total": 1,
+      "success_rate": 0.0,
+      "tests": [
+        {
+          "name": "Client Handling",
+          "passed": false,
+          "message": "0/10 clients succeeded in 0.03s",
+          "details": {
+            "avg_response_time": null
+          }
+        }
+      ]
+    },
+    "Error Handling": {
+      "passed": 5,
+      "failed": 0,
+      "total": 5,
+      "success_rate": 100.0,
+      "tests": [
+        {
+          "name": "Invalid Method",
+          "passed": true,
+          "message": "HTTP error 406",
+          "details": {}
+        },
+        {
+          "name": "Invalid Tool",
+          "passed": true,
+          "message": "HTTP error 406",
+          "details": {}
+        },
+        {
+          "name": "Missing Arguments",
+          "passed": true,
+          "message": "HTTP error 406",
+          "details": {}
+        },
+        {
+          "name": "Invalid URI",
+          "passed": true,
+          "message": "HTTP error 406",
+          "details": {}
+        },
+        {
+          "name": "Non-existent File",
+          "passed": true,
+          "message": "HTTP error 406",
+          "details": {}
+        }
+      ]
+    },
+    "Korean": {
+      "passed": 0,
+      "failed": 6,
+      "total": 6,
+      "success_rate": 0.0,
+      "tests": [
+        {
+          "name": "Basic Hangul",
+          "passed": false,
+          "message": "Invalid JSON response",
+          "details": {}
+        },
+        {
+          "name": "Complex Characters",
+          "passed": false,
+          "message": "Invalid JSON response",
+          "details": {}
+        },
+        {
+          "name": "Special Characters",
+          "passed": false,
+          "message": "Invalid JSON response",
+          "details": {}
+        },
+        {
+          "name": "Mixed Script",
+          "passed": false,
+          "message": "Invalid JSON response",
+          "details": {}
+        },
+        {
+          "name": "Emoji and Korean",
+          "passed": false,
+          "message": "Invalid JSON response",
+          "details": {}
+        },
+        {
+          "name": "JSON Korean",
+          "passed": false,
+          "message": "Invalid JSON response",
+          "details": {}
+        }
+      ]
+    },
+    "Performance": {
+      "passed": 1,
+      "failed": 3,
+      "total": 4,
+      "success_rate": 25.0,
+      "tests": [
+        {
+          "name": "Small File",
+          "passed": false,
+          "message": "Failed with status 406",
+          "details": {}
+        },
+        {
+          "name": "Medium File",
+          "passed": false,
+          "message": "Failed with status 406",
+          "details": {}
+        },
+        {
+          "name": "Large File",
+          "passed": false,
+          "message": "Failed with status 406",
+          "details": {}
+        },
+        {
+          "name": "Rapid Requests",
+          "passed": true,
+          "message": "Avg 0.002s for 10 requests",
+          "details": {}
+        }
+      ]
+    },
+    "Stress": {
+      "passed": 2,
+      "failed": 1,
+      "total": 3,
+      "success_rate": 66.66666666666666,
+      "tests": [
+        {
+          "name": "Request Handling",
+          "passed": false,
+          "message": "0.0% success rate",
+          "details": {
+            "total_requests": 59,
+            "requests_per_second": "5.9",
+            "avg_response_time": "0.172s"
+          }
+        },
+        {
+          "name": "Response Time P95",
+          "passed": true,
+          "message": "0.005s",
+          "details": {
+            "threshold": 3.0
+          }
+        },
+        {
+          "name": "Memory After Stress",
+          "passed": true,
+          "message": "Using 462.4 MB after stress",
+          "details": {}
+        }
+      ]
+    },
+    "Edge Cases": {
+      "passed": 2,
+      "failed": 5,
+      "total": 7,
+      "success_rate": 28.57142857142857,
+      "tests": [
+        {
+          "name": "Empty File",
+          "passed": false,
+          "message": "Failed to handle",
+          "details": {
+            "status_code": 406
+          }
+        },
+        {
+          "name": "Only Whitespace",
+          "passed": false,
+          "message": "Failed to handle",
+          "details": {
+            "status_code": 406
+          }
+        },
+        {
+          "name": "Very Long Line",
+          "passed": false,
+          "message": "Failed to handle",
+          "details": {
+            "status_code": 406
+          }
+        },
+        {
+          "name": "Binary Data",
+          "passed": true,
+          "message": "Handled gracefully",
+          "details": {
+            "status_code": 406
+          }
+        },
+        {
+          "name": "Mixed Encodings",
+          "passed": false,
+          "message": "Failed to handle",
+          "details": {
+            "status_code": 406
+          }
+        },
+        {
+          "name": "Null Bytes",
+          "passed": false,
+          "message": "Failed to handle",
+          "details": {
+            "status_code": 406
+          }
+        },
+        {
+          "name": "Batch Request",
+          "passed": true,
+          "message": "Server responded with 406",
+          "details": {}
+        }
+      ]
+    }
+  },
+  "performance": {
+    "stdio_init_time": {
+      "min": 2.8231089115142822,
+      "max": 2.8231089115142822,
+      "avg": 2.8231089115142822,
+      "median": 2.8231089115142822,
+      "p95": 2.8231089115142822
+    },
+    "stdio_convert_time": {
+      "min": 0.004168033599853516,
+      "max": 0.004168033599853516,
+      "avg": 0.004168033599853516,
+      "median": 0.004168033599853516,
+      "p95": 0.004168033599853516
+    },
+    "stdio_memory_mb": {
+      "min": 457.078125,
+      "max": 457.078125,
+      "avg": 457.078125,
+      "median": 457.078125,
+      "p95": 457.078125
+    },
+    "http_init_time": {
+      "min": 0.004541873931884766,
+      "max": 0.004541873931884766,
+      "avg": 0.004541873931884766,
+      "median": 0.004541873931884766,
+      "p95": 0.004541873931884766
+    },
+    "http_convert_time": {
+      "min": 0.0022559165954589844,
+      "max": 0.0022559165954589844,
+      "avg": 0.0022559165954589844,
+      "median": 0.0022559165954589844,
+      "p95": 0.0022559165954589844
+    },
+    "http_memory_mb": {
+      "min": 460.578125,
+      "max": 460.578125,
+      "avg": 460.578125,
+      "median": 460.578125,
+      "p95": 460.578125
+    },
+    "concurrent_memory_mb": {
+      "min": 460.328125,
+      "max": 460.328125,
+      "avg": 460.328125,
+      "median": 460.328125,
+      "p95": 460.328125
+    },
+    "convert_small_time": {
+      "min": 0.00255584716796875,
+      "max": 0.00255584716796875,
+      "avg": 0.00255584716796875,
+      "median": 0.00255584716796875,
+      "p95": 0.00255584716796875
+    },
+    "convert_medium_time": {
+      "min": 0.0022859573364257812,
+      "max": 0.0022859573364257812,
+      "avg": 0.0022859573364257812,
+      "median": 0.0022859573364257812,
+      "p95": 0.0022859573364257812
+    },
+    "convert_large_time": {
+      "min": 0.002552032470703125,
+      "max": 0.002552032470703125,
+      "avg": 0.002552032470703125,
+      "median": 0.002552032470703125,
+      "p95": 0.002552032470703125
+    },
+    "rapid_request_time": {
+      "min": 0.002265787124633789,
+      "max": 0.002265787124633789,
+      "avg": 0.002265787124633789,
+      "median": 0.002265787124633789,
+      "p95": 0.002265787124633789
+    },
+    "stress_memory_mb": {
+      "min": 462.359375,
+      "max": 462.359375,
+      "avg": 462.359375,
+      "median": 462.359375,
+      "p95": 462.359375
+    }
+  }
+}

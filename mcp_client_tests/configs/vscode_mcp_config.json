@@ -1,0 +1,16 @@
+{
+  "mcp.servers": {
+    "voidlight-markitdown": {
+      "type": "stdio",
+      "command": "python",
+      "args": ["-m", "voidlight_markitdown_mcp"],
+      "env": {
+        "VOIDLIGHT_MARKITDOWN_ENABLE_PLUGINS": "true",
+        "VOIDLIGHT_LOG_LEVEL": "INFO"
+      },
+      "capabilities": {
+        "tools": true
+      }
+    }
+  }
+}

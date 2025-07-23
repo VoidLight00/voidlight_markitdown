@@ -1,0 +1,81 @@
+# Configuration for custom MCP clients
+# This can be used by any MCP client that supports YAML configuration
+
+servers:
+  voidlight_markitdown_stdio:
+    name: "VoidLight MarkItDown (STDIO)"
+    description: "Korean-enhanced markdown converter via STDIO"
+    type: stdio
+    command: python
+    args:
+      - "-m"
+      - "voidlight_markitdown_mcp"
+    environment:
+      VOIDLIGHT_MARKITDOWN_ENABLE_PLUGINS: "true"
+      VOIDLIGHT_LOG_LEVEL: "INFO"
+      VOIDLIGHT_LOG_FILE: "./logs/voidlight_mcp.log"
+    capabilities:
+      - tools
+    startup_timeout: 5000  # ms
+    
+  voidlight_markitdown_http:
+    name: "VoidLight MarkItDown (HTTP/SSE)"
+    description: "Korean-enhanced markdown converter via HTTP/SSE"
+    type: http
+    base_url: "http://localhost:3001"
+    endpoints:
+      sse: "/sse"
+      mcp: "/mcp"
+      messages: "/messages/"
+    environment:
+      VOIDLIGHT_MARKITDOWN_ENABLE_PLUGINS: "true"
+      VOIDLIGHT_LOG_LEVEL: "INFO"
+    capabilities:
+      - tools
+      - streaming
+    connection_timeout: 10000  # ms
+    request_timeout: 30000     # ms
+
+# Client-specific settings
+client_settings:
+  retry_policy:
+    max_attempts: 3
+    backoff_multiplier: 2
+    initial_delay: 1000  # ms
+    
+  performance:
+    connection_pool_size: 5
+    max_concurrent_requests: 10
+    request_buffer_size: 1048576  # 1MB
+    
+  logging:
+    level: "DEBUG"
+    format: "json"
+    output:
+      - console
+      - file: "./logs/mcp_client.log"
+      
+  korean_support:
+    default_normalization: true
+    encoding: "utf-8"
+    fallback_encodings:
+      - "euc-kr"
+      - "cp949"
+
+# Tool-specific configurations
+tools:
+  convert_to_markdown:
+    timeout: 60000  # ms
+    max_retries: 2
+    cache:
+      enabled: true
+      ttl: 3600  # seconds
+      
+  convert_korean_document:
+    timeout: 90000  # ms
+    max_retries: 3
+    defaults:
+      normalize_korean: true
+    cache:
+      enabled: true
+      ttl: 7200  # seconds

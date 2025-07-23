@@ -1,0 +1,25 @@
+{
+  "mcpServers": {
+    "voidlight-markitdown": {
+      "type": "stdio",
+      "command": "python",
+      "args": [
+        "-m",
+        "voidlight_markitdown_mcp"
+      ],
+      "env": {
+        "VOIDLIGHT_MARKITDOWN_ENABLE_PLUGINS": "true",
+        "VOIDLIGHT_LOG_LEVEL": "DEBUG",
+        "VOIDLIGHT_LOG_FILE": "/Users/voidlight/voidlight_markitdown/mcp_client_tests/traces/claude_desktop.log"
+      }
+    },
+    "voidlight-markitdown-http": {
+      "type": "http",
+      "url": "http://localhost:3001/mcp",
+      "env": {
+        "VOIDLIGHT_MARKITDOWN_ENABLE_PLUGINS": "true",
+        "VOIDLIGHT_LOG_LEVEL": "DEBUG"
+      }
+    }
+  }
+}

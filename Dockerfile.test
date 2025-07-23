@@ -7,6 +7,7 @@ RUN apt-get update && apt-get install -y \
     git \
     build-essential \
     locales \
+    python3-venv \
     && rm -rf /var/lib/apt/lists/*
 
 # Set up locale for Korean text support
@@ -23,13 +24,24 @@ WORKDIR /app
 COPY . /app/
 
 # Create virtual environment
-RUN python -m venv /app/mcp-env
+RUN rm -rf /app/mcp-env && python3 -m venv /app/mcp-env
 
 # Install dependencies
 RUN /app/mcp-env/bin/pip install --upgrade pip && \
-    /app/mcp-env/bin/pip install -e packages/voidlight_markitdown && \
-    /app/mcp-env/bin/pip install -e packages/voidlight_markitdown-mcp && \
-    /app/mcp-env/bin/pip install pytest pytest-asyncio pytest-cov requests psutil pyyaml
+    /app/mcp-env/bin/pip install hatchling wheel setuptools
+
+# Install base dependencies first
+RUN /app/mcp-env/bin/pip install -e packages/voidlight_markitdown
+
+# Install numpy first for Korean dependencies
+RUN /app/mcp-env/bin/pip install numpy cython
+
+# Install MCP package without Korean dependencies
+RUN /app/mcp-env/bin/pip install -e "packages/voidlight_markitdown-mcp" --no-deps && \
+    /app/mcp-env/bin/pip install mcp~=1.8.0
+
+# Install test dependencies
+RUN /app/mcp-env/bin/pip install pytest pytest-asyncio pytest-cov requests psutil pyyaml
 
 # Set environment variables
 ENV PYTHONPATH=/app

@@ -1,0 +1,17 @@
+{
+  "timestamp": "2025-07-22T16:13:46.894208",
+  "results": {
+    "System Info": true,
+    "Locales": true,
+    "Imports": false,
+    "MCP Server": false,
+    "Korean Processing": true,
+    "File Operations": true,
+    "Container Resources": true,
+    "Network": false
+  },
+  "summary": {
+    "passed": 5,
+    "total": 8
+  }
+}

@@ -1,0 +1,27 @@
+# Requirements for VoidLight MarkItDown MCP Server Stress Testing
+
+# Core testing dependencies
+asyncio
+aiohttp>=3.8.0
+websockets>=10.0
+psutil>=5.9.0
+numpy>=1.21.0
+pandas>=1.3.0
+
+# Visualization and dashboard
+plotly>=5.0.0
+dash>=2.0.0
+matplotlib>=3.4.0
+seaborn>=0.11.0
+
+# Performance analysis
+scipy>=1.7.0
+
+# Additional utilities
+python-dotenv>=0.19.0
+
+# MCP SDK (should already be installed)
+# mcp>=0.1.0
+
+# Locust for advanced HTTP load testing (optional)
+# locust>=2.0.0

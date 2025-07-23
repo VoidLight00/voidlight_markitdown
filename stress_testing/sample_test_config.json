@@ -1,0 +1,93 @@
+{
+  "test_profile": "custom",
+  "results_dir": "stress_test_results",
+  "mcp_binary": "/Users/voidlight/voidlight_markitdown/mcp-env/bin/voidlight-markitdown-mcp",
+  "enable_dashboard": true,
+  "generate_plots": true,
+  "scenario_overrides": {
+    "request_timeout": 30,
+    "connection_timeout": 10
+  },
+  "custom_scenarios": [
+    {
+      "name": "baseline_performance",
+      "load_pattern": "sustained",
+      "client_type": "http_sse",
+      "initial_clients": 10,
+      "max_clients": 10,
+      "duration_seconds": 300,
+      "ramp_up_seconds": 0,
+      "request_delay_ms": 100,
+      "payload_size": "medium",
+      "korean_ratio": 0.5,
+      "error_injection_rate": 0.0
+    },
+    {
+      "name": "korean_text_heavy",
+      "load_pattern": "gradual_ramp",
+      "client_type": "http_sse",
+      "initial_clients": 5,
+      "max_clients": 50,
+      "duration_seconds": 300,
+      "ramp_up_seconds": 120,
+      "request_delay_ms": 100,
+      "payload_size": "large",
+      "korean_ratio": 1.0,
+      "error_injection_rate": 0.02
+    },
+    {
+      "name": "mixed_protocol_stress",
+      "load_pattern": "wave",
+      "client_type": "mixed",
+      "initial_clients": 10,
+      "max_clients": 80,
+      "duration_seconds": 480,
+      "ramp_up_seconds": 60,
+      "request_delay_ms": 50,
+      "payload_size": "medium",
+      "korean_ratio": 0.6,
+      "error_injection_rate": 0.05
+    },
+    {
+      "name": "connection_churn",
+      "load_pattern": "random",
+      "client_type": "http_sse",
+      "initial_clients": 5,
+      "max_clients": 40,
+      "duration_seconds": 180,
+      "ramp_up_seconds": 30,
+      "request_delay_ms": 20,
+      "payload_size": "small",
+      "korean_ratio": 0.3,
+      "error_injection_rate": 0.1,
+      "connection_timeout": 5,
+      "request_timeout": 10
+    },
+    {
+      "name": "sustained_high_load",
+      "load_pattern": "sustained",
+      "client_type": "http_sse",
+      "initial_clients": 100,
+      "max_clients": 100,
+      "duration_seconds": 600,
+      "ramp_up_seconds": 0,
+      "request_delay_ms": 50,
+      "payload_size": "medium",
+      "korean_ratio": 0.5,
+      "error_injection_rate": 0.03
+    },
+    {
+      "name": "burst_pattern_test",
+      "load_pattern": "spike",
+      "client_type": "stdio",
+      "initial_clients": 5,
+      "max_clients": 50,
+      "duration_seconds": 180,
+      "ramp_up_seconds": 10,
+      "request_delay_ms": 100,
+      "payload_size": "small",
+      "korean_ratio": 0.4,
+      "error_injection_rate": 0.05
+    }
+  ]
+}
